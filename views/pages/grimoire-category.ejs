@@ -1,0 +1,78 @@
+<% const cat = typeof category !== 'undefined' ? category : null; %>
+<% const arts = typeof articles !== 'undefined' && Array.isArray(articles) ? articles : []; %>
+<% const spot = typeof spotlightArticle !== 'undefined' ? spotlightArticle : null; %>
+<% const rest = typeof articlesRest !== 'undefined' && Array.isArray(articlesRest) ? articlesRest : []; %>
+<% if (!cat) { %>
+<p class="font-ui text-sm text-zinc-400">Nothing here.</p>
+<% } else { %>
+<article class="grimoire-category mx-auto w-full max-w-prose px-1 pb-8 pt-1 sm:px-2" lang="en">
+  <p class="grimoire-category__crumb font-ui mb-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[12px] text-zinc-400 sm:text-[13px]">
+    <a href="/daily" class="font-medium text-violet-300 underline decoration-violet-500/50 underline-offset-2 hover:text-violet-200">Daily</a>
+    <span class="text-zinc-600" aria-hidden="true">/</span>
+    <a href="/daily/grimoire/browse" class="font-medium text-violet-300 underline decoration-violet-500/50 underline-offset-2 hover:text-violet-200">Library</a>
+    <span class="text-zinc-600" aria-hidden="true">/</span>
+    <span class="font-medium text-zinc-200"><%= cat.title %></span>
+  </p>
+
+  <% if (arts.length) { %>
+  <p class="font-ui mb-6 text-[13px] leading-relaxed text-zinc-500 sm:text-[14px]"><%= cat.deck %></p>
+  <% } %>
+
+  <% if (!arts.length) { %>
+  <header class="grimoire-category__head mb-6 border-b border-zinc-700 pb-5">
+    <p class="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-500">Grimoire</p>
+    <h1 class="font-display mt-2 text-xl font-bold uppercase leading-tight tracking-[0.04em] text-zinc-50 sm:text-2xl">
+      <%= cat.title %>
+    </h1>
+    <p class="font-ui mt-3 text-[14px] leading-relaxed text-zinc-400 sm:text-[15px]">
+      <%= cat.deck %>
+    </p>
+  </header>
+  <p class="rounded-xl border border-dashed border-zinc-600 bg-zinc-900/60 px-4 py-8 text-center font-ui text-sm text-zinc-400">
+    No articles in this topic yet.
+  </p>
+  <% } else if (spot) { %>
+  <a
+    href="/daily/grimoire/article/<%= spot.slug %>"
+    class="grimoire-category__spotlight group mb-8 block overflow-hidden rounded-2xl border border-violet-500/35 bg-gradient-to-br from-violet-950/50 via-zinc-900/90 to-zinc-950 p-5 shadow-lg shadow-violet-950/20 transition hover:border-amber-400/35 hover:shadow-xl sm:p-6"
+  >
+    <p class="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-violet-300/90">Start here</p>
+    <h1 class="font-display mt-2 text-xl font-bold uppercase leading-tight tracking-[0.04em] text-zinc-50 sm:text-2xl group-hover:text-white">
+      <%= spot.title %>
+    </h1>
+    <p class="font-ui mt-3 text-[14px] leading-relaxed text-zinc-300 sm:text-[15px]">
+      <%= spot.deck %>
+    </p>
+    <span class="mt-4 inline-flex items-center gap-2 font-display text-[10px] font-bold uppercase tracking-[0.14em] text-amber-200/95">
+      Read article
+      <span aria-hidden="true" class="transition group-hover:translate-x-0.5">→</span>
+    </span>
+  </a>
+
+  <% if (rest.length) { %>
+  <h2 class="mb-4 font-display text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-500">More in this topic</h2>
+  <ul class="grimoire-category__list m-0 flex list-none flex-col gap-4 p-0 sm:gap-5">
+    <% rest.forEach(function (art) { %>
+    <li class="m-0 list-none">
+      <a
+        href="/daily/grimoire/article/<%= art.slug %>"
+        class="grimoire-category__row group block rounded-xl border border-zinc-600 bg-zinc-900/80 px-3.5 py-3 shadow-md shadow-black/20 transition-colors hover:border-violet-500/40 hover:bg-zinc-800/90 hover:shadow-lg sm:px-4 sm:py-3.5"
+      >
+        <span class="font-display block text-[10px] font-bold uppercase tracking-[0.07em] text-zinc-100 sm:text-[11px]">
+          <%= art.title %>
+        </span>
+        <span class="font-ui mt-1 block text-[11px] leading-snug text-zinc-400 sm:text-[12px] sm:leading-relaxed">
+          <%= art.deck %>
+        </span>
+      </a>
+    </li>
+    <% }); %>
+  </ul>
+  <% } else { %>
+  <p class="mb-2 font-ui text-[13px] leading-relaxed text-zinc-500">
+    This folder currently has one long read — more entries may arrive in future updates.
+  </p>
+  <% } %>
+  <% } %>
+</article>
+<% } %>

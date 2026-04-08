@@ -1,0 +1,114 @@
+<div class="auth-window-bar auth-window-bar--login flex min-h-[52px] items-center gap-3 px-3 py-2 sm:px-4">
+  <span class="auth-window-icon" aria-hidden="true">⚔</span>
+  <div class="min-w-0 flex-1">
+    <span class="font-display block text-[10px] font-bold uppercase leading-tight tracking-[0.2em] text-white/95 sm:text-[11px] sm:tracking-[0.26em]">Adventurer login</span>
+    <span class="mt-0.5 block font-display text-[9px] font-semibold uppercase tracking-[0.18em] text-white/55">Session · secure</span>
+  </div>
+  <span class="auth-status-pill" title="Channel online">
+    <span class="relative flex h-2 w-2">
+      <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-300 opacity-40"></span>
+      <span class="relative inline-flex h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.9)]"></span>
+    </span>
+    <span class="hidden font-display text-[9px] font-semibold uppercase tracking-wider text-emerald-100/95 sm:inline">Live</span>
+  </span>
+</div>
+
+<div class="auth-window-body px-4 py-5 sm:px-6 sm:py-6">
+  <% if (typeof registered !== 'undefined' && registered) { %>
+    <div class="auth-banner-success mb-4 flex gap-3 rounded-xl border border-emerald-300/80 bg-emerald-50/95 px-3 py-3 sm:px-4" role="status">
+      <span class="text-lg leading-none text-emerald-600" aria-hidden="true">✦</span>
+      <p class="text-left text-[15px] font-medium leading-snug text-emerald-900 sm:text-sm">Account ready — sign in with your username/email and password to enter.</p>
+    </div>
+  <% } %>
+
+  <% if (errors && errors.length) { %>
+    <ul class="auth-alert mb-4 space-y-1.5 rounded-xl border border-red-300/90 bg-red-50 px-3 py-3 text-[15px] text-red-900 sm:px-4 sm:text-sm" role="alert">
+      <% errors.forEach(function (msg) { %>
+        <li class="flex gap-2 pl-0.5">
+          <span class="shrink-0 font-display font-bold text-red-500" aria-hidden="true">!</span>
+          <span><%= msg %></span>
+        </li>
+      <% }); %>
+    </ul>
+  <% } %>
+
+  <p class="auth-form-intro mb-5 text-[15px] leading-relaxed text-zinc-400 sm:text-base">
+    Welcome back, adventurer. Sign in with your username or email.
+  </p>
+
+  <form method="post" action="/login" class="auth-form-stagger space-y-5" data-auth-form>
+    <div class="auth-stagger-item auth-d1">
+      <label class="auth-label" for="login">Username or email</label>
+      <div class="auth-input-wrap">
+        <span class="auth-input-icon" aria-hidden="true">
+          <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6h16v12H4z"/><path d="M4 8l8 6 8-6"/></svg>
+        </span>
+        <input
+          id="login"
+          name="login"
+          type="text"
+          inputmode="text"
+          autocomplete="username"
+          enterkeyhint="next"
+          value="<%= form.login %>"
+          class="auth-input"
+          placeholder="username atau you@example.com"
+          required
+        />
+      </div>
+    </div>
+
+    <div class="auth-stagger-item auth-d2">
+      <div class="mb-1.5 flex flex-wrap items-end justify-between gap-2">
+        <label class="auth-label auth-label--inline" for="password">Password</label>
+        <span class="font-display text-[9px] font-semibold uppercase tracking-[0.15em] text-zinc-500">Sealed</span>
+      </div>
+      <div class="auth-input-wrap auth-input-wrap-password">
+        <span class="auth-input-icon" aria-hidden="true">
+          <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 11V8a5 5 0 0110 0v3"/><rect x="5" y="11" width="14" height="10" rx="2"/></svg>
+        </span>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          autocomplete="current-password"
+          enterkeyhint="go"
+          class="auth-input"
+          placeholder="Your password"
+          required
+        />
+        <button type="button" class="auth-password-toggle" data-password-toggle="password" aria-label="Show password" aria-pressed="false">
+          <span class="auth-toggle-icon auth-toggle-icon--off" aria-hidden="true">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+          </span>
+          <span class="auth-toggle-icon auth-toggle-icon--on hidden" aria-hidden="true">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 3l18 18M10.6 10.6a3 3 0 004.8 4.8M9.9 5.1A10.3 10.3 0 0112 5c6 0 10 7 10 7a18 18 0 01-5.2 6.2M6.3 6.3C3.7 8.2 2 12 2 12s4 7 10 7a9.9 9.9 0 005-1.4"/></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <div class="auth-stagger-item auth-d3 pt-1">
+      <button type="submit" class="launch-btn-primary auth-btn-ro flex min-h-[52px] w-full items-center justify-center gap-2 rounded-xl px-4 font-display text-sm font-bold uppercase tracking-[0.14em] sm:tracking-[0.16em]">
+        <span class="auth-btn-label">Start adventure</span>
+        <span class="auth-btn-spinner hidden h-5 w-5 shrink-0 animate-spin rounded-full border-2 border-white/35 border-t-white" aria-hidden="true"></span>
+      </button>
+    </div>
+  </form>
+
+  <div class="auth-card-footer auth-card-footer--promo auth-fade-late mt-5 rounded-xl sm:mt-6">
+    <div class="auth-footer-promo">
+      <div class="auth-footer-promo__mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 7.4H22l-6 4.6 2.3 7L12 17.8 5.7 21l2.3-7-6-4.6h7.6L12 2z"/></svg>
+      </div>
+      <div class="auth-footer-promo__copy">
+        <p class="auth-footer-promo__title">New adventurer?</p>
+        <p class="auth-footer-promo__sub">Roll a Novice — one account, your journey.</p>
+      </div>
+    </div>
+    <a href="/register" class="auth-footer-cta auth-footer-cta--register">
+      <span>Create account</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+  </div>
+</div>

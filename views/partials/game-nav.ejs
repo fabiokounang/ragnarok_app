@@ -1,0 +1,46 @@
+<% const cur = typeof navActive === 'string' ? navActive : ''; %>
+<% function navClass(id) {
+  if (id === 'quest') return (cur === 'quest' || cur === 'daily') ? 'text-ro-goldbright border-ro-gold/50 bg-ro-gold/10 shadow-gold' : 'text-ro-mist/60 border-ro-gold/15 bg-ro-panel/50 hover:border-ro-gold/35 hover:text-ro-cream';
+  return id === cur ? 'text-ro-goldbright border-ro-gold/50 bg-ro-gold/10 shadow-gold' : 'text-ro-mist/60 border-ro-gold/15 bg-ro-panel/50 hover:border-ro-gold/35 hover:text-ro-cream';
+} %>
+
+<nav class="fixed bottom-0 left-0 right-0 z-30 border-t border-ro-gold/15 bg-ro-deep/95 px-2 pt-2 shadow-nav backdrop-blur-lg sm:px-4" style="padding-bottom: max(0.75rem, env(safe-area-inset-bottom));" aria-label="Main">
+  <div class="mx-auto flex max-w-lg items-end justify-between gap-1 pb-1">
+    <a href="/daily" class="flex flex-1 flex-col items-center gap-1 py-1 <%= navClass('quest') %> rounded-lg border transition">
+      <span class="flex h-10 w-10 rotate-45 items-center justify-center rounded-md border border-current bg-ro-ink/40">
+        <svg class="h-4 w-4 -rotate-45" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+          <path d="M4 4v15.5" />
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+        </svg>
+      </span>
+      <span class="text-[9px] font-bold uppercase tracking-wider">Task</span>
+    </a>
+    <a href="/training" class="flex flex-1 flex-col items-center gap-1 py-1 <%= navClass('training') %> rounded-lg border transition">
+      <span class="flex h-10 w-10 rotate-45 items-center justify-center rounded-md border border-current bg-ro-ink/40">
+        <svg class="h-4 w-4 -rotate-45" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <path d="M6 4v16M18 4v16M6 12h12" />
+          <path d="M4 6h4M16 6h4M4 18h4M16 18h4" />
+        </svg>
+      </span>
+      <span class="text-[9px] font-bold uppercase tracking-wider">Train</span>
+    </a>
+    <a href="/inventory" class="flex flex-1 flex-col items-center gap-1 py-1 <%= navClass('inventory') %> rounded-lg border transition">
+      <span class="flex h-10 w-10 rotate-45 items-center justify-center rounded-md border border-current bg-ro-ink/40">
+        <svg class="h-4 w-4 -rotate-45" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <path d="M12 2c0 4-2 7-6 9 4 2 6 5 6 9 0-4 2-7 6-9-4-2-6-5-6-9z" />
+          <path d="M12 22V12" />
+        </svg>
+      </span>
+      <span class="text-[9px] font-bold uppercase tracking-wider">Vault</span>
+    </a>
+    <a href="/profile" class="flex flex-1 flex-col items-center gap-1 py-1 <%= navClass('profile') %> rounded-lg border transition">
+      <span class="flex h-10 w-10 rotate-45 items-center justify-center rounded-md border border-current bg-ro-ink/40">
+        <svg class="h-4 w-4 -rotate-45" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <path d="M12 3L4 8v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V8l-8-5z" />
+        </svg>
+      </span>
+      <span class="text-[9px] font-bold uppercase tracking-wider">Character</span>
+    </a>
+  </div>
+</nav>

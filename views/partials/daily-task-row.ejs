@@ -1,0 +1,308 @@
+<% const t = typeof task !== 'undefined' ? task : {}; %>
+<% var qCh = typeof questChannel !== 'undefined' ? questChannel : 'daily'; %>
+<% var acceptAction = qCh === 'weekly' ? '/weekly/accept' : '/daily/accept'; %>
+<% var completeAction = qCh === 'weekly' ? '/weekly/complete' : '/daily/complete'; %>
+<% var ajaxDataAttr = qCh === 'weekly' ? 'data-weekly-ajax' : 'data-daily-ajax'; %>
+<% var tierLabel = t.isBonus ? 'Bonus' : (t.isWeeklyBoss ? 'Boss' : (qCh === 'weekly' ? 'Weekly' : 'Core')); %>
+<% var tierChipClass = t.isWeeklyBoss ? 'daily-task-card__chip--bonus-tier' : (qCh === 'weekly' ? 'daily-task-card__chip--weekly-tier' : (t.isBonus ? 'daily-task-card__chip--bonus-tier' : 'daily-task-card__chip--core-tier')); %>
+<% const accepted = !!t.accepted; %>
+<% const bm = typeof bonusMult === 'number' && bonusMult > 1 ? bonusMult : null; %>
+<% const pct = t.target > 0 ? Math.min(100, Math.round((t.current / t.target) * 100)) : 0; %>
+<% const multLabel = bm != null ? Number(bm.toFixed(1)) : null; %>
+<% const showIntNook = t.statTag && String(t.statTag).toLowerCase() === 'intelligence'; %>
+<% const intNookId = 'int-nook-' + (t.id != null ? t.id : '0'); %>
+<%
+  const rewardMode = (function () {
+    if (qCh === 'daily') return t.isBonus ? 'exp_item_possible' : 'exp_only';
+    if (qCh === 'weekly') return t.isWeeklyBoss ? 'exp_item' : 'exp_item_possible';
+    return 'exp_only';
+  })();
+  const rewardModeLabel = rewardMode === 'exp_only'
+    ? 'EXP only'
+    : rewardMode === 'exp_item'
+    ? 'EXP + item'
+    : 'EXP + item chance';
+%>
+<%
+  const statChipLabel = (function () {
+    const m = {
+      strength: 'STR',
+      agility: 'AGI',
+      vitality: 'VIT',
+      intelligence: 'INT',
+      precision: 'DEX',
+      spirit: 'SPI',
+      discipline: 'DIS',
+      endurance: 'END',
+      balance: 'BAL',
+    };
+    return function (tag) {
+      if (!tag) return '';
+      const k = String(tag).toLowerCase();
+      return m[k] || String(tag);
+    };
+  })();
+  const themeKey = (function () {
+    const k = String(t.statTag || '').toLowerCase();
+    const map = {
+      strength: 'str',
+      agility: 'agi',
+      vitality: 'vit',
+      intelligence: 'int',
+      precision: 'dex',
+      spirit: 'spi',
+      discipline: 'dis',
+      endurance: 'end',
+      balance: 'bal',
+    };
+    return map[k] || 'neutral';
+  })();
+  const tgtN = typeof t.target === 'number' ? t.target : 1;
+  const curN = typeof t.current === 'number' ? t.current : 0;
+  const expN = Number(t.rewardExp) || 0;
+  var freqLabel = qCh === 'weekly' ? (t.isWeeklyBoss ? 'Boss · this week' : 'This week') : tgtN > 1 ? tgtN + ' steps' : '1× today';
+  var diffLabel = expN >= 50 ? 'Hard' : expN >= 25 ? 'Medium' : 'Easy';
+  const qs = typeof t.questStreak === 'number' && !Number.isNaN(t.questStreak) ? t.questStreak : 0;
+  const questStreakN = Math.min(999, Math.max(0, Math.floor(qs)));
+  const heroPct = accepted ? pct : 0;
+  const heroImgUrl = typeof t.heroImageUrl === 'string' ? t.heroImageUrl.trim() : '';
+  const escHeroCss =
+    heroImgUrl && typeof heroUrlForCssUrlValue === 'function'
+      ? heroUrlForCssUrlValue(heroImgUrl)
+      : String(heroImgUrl).replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+%>
+<li class="daily-task-card daily-task-card--theme-<%= themeKey %> <%= t.isBonus ? 'daily-task-card--bonus' : '' %> <%= t.isWeeklyBoss ? 'daily-task-card--week-boss' : '' %> <%= qCh === 'weekly' && !t.isWeeklyBoss ? 'daily-task-card--weekly' : '' %> <%= t.done ? 'daily-task-card--done' : '' %>" <% if (qCh === 'weekly') { %>data-weekly-task-id="<%= t.id %>"<% } else { %>data-daily-task-id="<%= t.id %>"<% } %>>
+  <div class="daily-task-card__scan" aria-hidden="true"></div>
+  <div class="daily-task-card__corners" aria-hidden="true"></div>
+  <div class="daily-task-card__inner">
+    <div class="daily-task-card__accent" aria-hidden="true"></div>
+    <div class="daily-task-card__main">
+      <% if (t.done) { %>
+      <details class="daily-task-card__done-fold">
+        <summary class="daily-task-card__done-sum">
+          <div class="daily-task-card__done-sum-row">
+            <div class="daily-task-card__glyph daily-task-card__glyph--fold" aria-hidden="true">
+              <svg class="daily-task-card__glyph-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            </div>
+            <div class="daily-task-card__chips daily-task-card__chips--fold">
+              <span class="daily-task-card__chip <%= tierChipClass %>"><%= tierLabel %></span>
+              <% if (t.pillarLabel) { %>
+              <span class="daily-task-card__chip daily-task-card__chip--pillar" title="<%= t.pillarHint || '' %>"><%= t.pillarLabel %></span>
+              <% } %>
+              <% if (t.statTag) { %>
+              <span class="daily-task-card__chip daily-task-card__chip--ghost"><%= statChipLabel(t.statTag) %></span>
+              <% } %>
+            </div>
+            <span class="daily-task-card__done-sum-title min-w-0 flex-1 truncate font-display text-[11px] font-bold uppercase leading-tight tracking-[0.06em] text-emerald-300 sm:text-xs"><%= t.name %></span>
+            <span class="daily-task-card__done-sum-reward shrink-0 font-mono text-[10px] font-bold tabular-nums text-emerald-200 sm:text-[11px]">+<span class="tabular-nums"><%= t.rewardExp %></span> EXP</span>
+            <span class="daily-task-card__done-chev shrink-0 text-emerald-400/80 transition-transform duration-200" aria-hidden="true">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+            </span>
+          </div>
+        </summary>
+        <div class="daily-task-card__done-body">
+          <h4 class="daily-task-card__title daily-task-card__title--done"><%= t.name %></h4>
+          <% if (t.description) { %>
+          <p class="daily-task-card__desc"><%= t.description %></p>
+          <% } %>
+          <% if (t.alternatives && t.alternatives.length) { %>
+          <div class="daily-task-card__alts">
+            <p class="daily-task-card__alts-title">Alternative <span class="daily-task-card__alts-hint">(pick one)</span></p>
+            <ul class="daily-task-card__alts-list">
+              <% t.alternatives.forEach(function (line) { %>
+              <li class="daily-task-card__alts-item"><%= line %></li>
+              <% }); %>
+            </ul>
+          </div>
+          <% } %>
+          <% if (t.userNote) { %>
+          <p class="mt-2 rounded-lg border border-zinc-600 bg-zinc-800/80 px-2 py-1.5 font-ui text-[11px] leading-snug text-zinc-300"><span class="font-semibold text-zinc-100">Note:</span> <%= t.userNote %></p>
+          <% } %>
+          <% if (showIntNook) { %>
+          <%- include('./daily-task-int-nook', { taskSlug: t.slug, nookId: intNookId + '-done' }) %>
+          <% } %>
+          <div class="daily-task-card__hud">
+            <p class="daily-task-card__hud-kicker">Reward &amp; progress</p>
+            <div class="daily-task-card__track">
+              <div class="daily-task-card__fill" style="width: <%= pct %>%"></div>
+            </div>
+            <div class="daily-task-card__meta">
+              <div class="daily-task-card__exp-row">
+                <span class="daily-task-card__exp">+<strong class="tabular-nums"><%= t.rewardExp %></strong> <span class="daily-task-card__exp-suffix">EXP</span></span>
+                <% if (t.isBonus && multLabel != null) { %>
+                <span class="daily-task-card__exp-mult" title="This bonus pays <%= multLabel %> times the EXP you would get for the same task as a normal core daily.">×<%= multLabel %></span>
+                <% } %>
+              </div>
+              <span class="daily-task-card__prog">
+                <span class="daily-task-card__prog-label">Progress</span>
+                <span class="daily-task-card__prog-nums tabular-nums"><%= t.current %> / <%= t.target %></span>
+              </span>
+            </div>
+          </div>
+          <p class="daily-task-card__sealed font-display text-[9px] font-bold uppercase tracking-[0.2em] text-emerald-400/90">Complete</p>
+        </div>
+      </details>
+      <% } else { %>
+      <div class="daily-task-card__hero">
+        <div
+          class="daily-task-card__hero-bg<%= heroImgUrl ? ' daily-task-card__hero-bg--photo' : '' %>"
+          <% if (heroImgUrl) { %>style="--hero-img: url(&quot;<%= escHeroCss %>&quot;);"<% } %>
+          aria-hidden="true"
+        ></div>
+        <div class="daily-task-card__hero-scrim" aria-hidden="true"></div>
+        <div class="daily-task-card__hero-inner">
+          <div class="daily-task-card__hero-top">
+            <% if (questStreakN >= 1) { %>
+            <span class="daily-task-card__streak-pill" title="<%= qCh === 'weekly' ? 'Consecutive weeks with this weekly quest cleared' : 'Consecutive days with this daily quest cleared' %>">
+              <span class="daily-task-card__streak-ic" aria-hidden="true">🔥</span>
+              <span class="tabular-nums"><%= questStreakN %><%= qCh === 'weekly' ? 'w' : 'd' %></span>
+            </span>
+            <% } %>
+            <span class="daily-task-card__tier-chip"><%= tierLabel %></span>
+            <% if (t.pillarLabel) { %>
+            <span class="daily-task-card__pillar-chip" title="<%= t.pillarHint || '' %>"><%= t.pillarLabel %></span>
+            <% } %>
+            <% if (t.statTag) { %>
+            <span class="daily-task-card__stat-chip"><%= statChipLabel(t.statTag) %></span>
+            <% } %>
+          </div>
+          <h4 class="daily-task-card__title daily-task-card__title--hero"><%= t.name %></h4>
+          <div class="daily-task-card__hero-meta">
+            <span class="daily-task-card__hero-meta-item">
+              <svg class="daily-task-card__hero-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                <path d="M3 3v5h5" />
+                <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
+                <path d="M16 21h5v-5" />
+              </svg>
+              <%= freqLabel %>
+            </span>
+            <span class="daily-task-card__hero-meta-dot" aria-hidden="true">·</span>
+            <span class="daily-task-card__hero-meta-item" title="Rough difficulty from base EXP">
+              <svg class="daily-task-card__hero-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 19V5" />
+                <path d="M4 19h16" />
+                <path d="M8 15v-4" />
+                <path d="M12 15V9" />
+                <path d="M16 15v-2" />
+                <path d="M20 15v-6" />
+              </svg>
+              <%= diffLabel %>
+            </span>
+            <span class="daily-task-card__hero-meta-dot" aria-hidden="true">·</span>
+            <span class="daily-task-card__hero-meta-item" title="Reward type">
+              <svg class="daily-task-card__hero-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 8v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8" />
+                <path d="M23 6H1v2h22V6z" />
+                <path d="M12 18V6" />
+                <path d="M7 6c0-1.7 1.3-3 3-3 1.5 0 2.4 1 2 3" />
+                <path d="M17 6c0-1.7-1.3-3-3-3-1.5 0-2.4 1-2 3" />
+              </svg>
+              <%= rewardModeLabel %>
+            </span>
+          </div>
+          <div class="daily-task-card__track daily-task-card__track--hero" role="presentation">
+            <div class="daily-task-card__fill daily-task-card__fill--hero" style="width: <%= heroPct %>%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="daily-task-card__sheet">
+      <% if (t.description || (t.alternatives && t.alternatives.length)) { %>
+      <details class="daily-task-card__more">
+        <summary class="daily-task-card__more-sum">Details &amp; alternatives</summary>
+        <div class="daily-task-card__more-body">
+          <% if (t.description) { %>
+          <p class="daily-task-card__desc daily-task-card__desc--compact"><%= t.description %></p>
+          <% } %>
+          <% if (t.alternatives && t.alternatives.length) { %>
+          <div class="daily-task-card__alts daily-task-card__alts--compact">
+            <p class="daily-task-card__alts-title">Alternative <span class="daily-task-card__alts-hint">(pick one)</span></p>
+            <ul class="daily-task-card__alts-list">
+              <% t.alternatives.forEach(function (line) { %>
+              <li class="daily-task-card__alts-item"><%= line %></li>
+              <% }); %>
+            </ul>
+          </div>
+          <% } %>
+        </div>
+      </details>
+      <% } %>
+      <% if (showIntNook) { %>
+      <%- include('./daily-task-int-nook', { taskSlug: t.slug, nookId: intNookId }) %>
+      <% } %>
+      <% if (accepted) { %>
+      <div class="daily-task-card__hud daily-task-card__hud--compact">
+        <div class="daily-task-card__meta daily-task-card__meta--inline">
+          <div class="daily-task-card__exp-row">
+            <span class="daily-task-card__exp">+<strong class="tabular-nums"><%= t.rewardExp %></strong> <span class="daily-task-card__exp-suffix">EXP</span></span>
+            <% if (t.isBonus && multLabel != null) { %>
+            <span class="daily-task-card__exp-mult" title="This bonus pays <%= multLabel %> times the EXP you would get for the same task as a normal core daily.">×<%= multLabel %></span>
+            <% } %>
+          </div>
+          <span class="daily-task-card__prog">
+            <span class="daily-task-card__prog-label">Progress</span>
+            <span class="daily-task-card__prog-nums tabular-nums"><%= t.current %> / <%= t.target %></span>
+          </span>
+        </div>
+      </div>
+      <% } else { %>
+      <div class="daily-task-card__accept-dock daily-task-card__accept-dock--simple">
+        <div class="daily-task-card__accept-reward">
+          <span class="daily-task-card__accept-reward-label">Reward</span>
+          <div class="daily-task-card__exp-row daily-task-card__exp-row--accept">
+            <span class="daily-task-card__exp">+<strong class="tabular-nums"><%= t.rewardExp %></strong> <span class="daily-task-card__exp-suffix">EXP</span></span>
+            <% if (t.isBonus && multLabel != null) { %>
+            <span class="daily-task-card__exp-mult" title="This bonus pays <%= multLabel %> times the EXP you would get for the same task as a normal core daily.">×<%= multLabel %></span>
+            <% } %>
+          </div>
+        </div>
+      </div>
+      <% } %>
+      <% if (!accepted) { %>
+      <form action="<%= acceptAction %>" method="post" class="daily-task-card__form daily-task-card__form--accept" <%= ajaxDataAttr %>>
+        <input type="hidden" name="taskId" value="<%= t.id %>" />
+        <button type="submit" class="daily-task-card__cta-quest auth-btn-ro relative inline-flex min-h-[48px] w-full items-center justify-center gap-2 overflow-hidden rounded-xl px-4 font-display text-[10px] font-bold uppercase tracking-[0.14em] sm:text-[11px] sm:tracking-[0.16em]">
+          <span class="daily-task-card__cta-quest-shine" aria-hidden="true"></span>
+          <span class="daily-task-card__cta-quest-core" aria-hidden="true"></span>
+          <span class="auth-btn-label relative z-[1] flex items-center gap-2">
+            <svg class="daily-task-card__cta-quest-rune h-3.5 w-3.5 shrink-0 opacity-90" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2L4 7v10l8 5 8-5V7l-8-5z"/><path d="M12 22V12M12 12L4 7M12 12l8-5"/></svg>
+            Initialize quest
+          </span>
+          <span class="auth-btn-spinner relative z-[1] hidden h-4 w-4 shrink-0 rounded-full border-2 border-cyan-200/40 border-t-cyan-100" aria-hidden="true"></span>
+        </button>
+      </form>
+      <p class="daily-task-card__btn-hint daily-task-card__btn-hint--accept font-ui text-[11px] leading-snug text-zinc-500"><% if (qCh === 'weekly') { %>Commit for this week — one bind per weekly card (resets Monday, server date).<% } else { %>Stand by at the gate until you are ready to commit — one bind per card per day.<% } %></p>
+      <% } else { %>
+      <% const multiStep = tgtN > 1 && (t.isBonus || qCh === 'weekly'); %>
+      <% let btnLabel = 'Done — claim EXP'; if (multiStep) { btnLabel = (curN + 1 < tgtN) ? ('Check-in ' + (curN + 1) + '/' + tgtN + ' (no EXP yet)') : ('Final check-in — claim EXP'); } %>
+      <form action="<%= completeAction %>" method="post" class="daily-task-card__form" <%= ajaxDataAttr %>>
+        <input type="hidden" name="taskId" value="<%= t.id %>" />
+        <button type="submit" class="daily-task-card__cta launch-btn-primary auth-btn-ro inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-lg px-3 font-display text-[10px] font-bold uppercase leading-tight tracking-[0.08em] sm:px-4 sm:text-[11px] sm:tracking-[0.1em]">
+          <span class="auth-btn-label"><%= btnLabel %></span>
+          <span class="auth-btn-spinner hidden h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-white/35 border-t-white" aria-hidden="true"></span>
+        </button>
+      </form>
+      <p class="daily-task-card__btn-hint font-ui text-[11px] leading-snug text-zinc-500"><% if (multiStep) { %>Tap <strong class="font-semibold text-zinc-300"><%= tgtN %> times</strong> on your honor when you earn each step. Only the <strong class="font-semibold text-zinc-300">last</strong> tap pays EXP.<% } else if (qCh === 'weekly') { %>One tap when you have finished this week’s objective; EXP is credited immediately.<% } else { %>One tap when you have finished for today; EXP is credited immediately.<% } %></p>
+      <% if (qCh === 'daily' && accepted && !t.done) { %>
+      <div class="daily-task-card__note mt-3 rounded-xl border border-zinc-600 bg-zinc-950/50 p-3">
+        <label class="block font-ui text-[10px] font-semibold uppercase tracking-wider text-zinc-400" for="daily-note-<%= t.id %>">Optional note or proof</label>
+        <form action="/daily/note" method="post" class="mt-1.5 space-y-2" data-auth-form>
+          <input type="hidden" name="taskId" value="<%= t.id %>" />
+          <textarea
+            id="daily-note-<%= t.id %>"
+            name="note"
+            rows="2"
+            maxlength="768"
+            class="w-full rounded-lg border border-zinc-600 bg-zinc-900 px-2.5 py-2 font-ui text-[12px] text-zinc-100 placeholder:text-zinc-500 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500/40"
+            placeholder="Link, short proof, or context (honor system)"
+          ><%= t.userNote ? t.userNote : '' %></textarea>
+          <button type="submit" class="rounded-lg border border-zinc-500 bg-zinc-800 px-3 py-1.5 font-display text-[8px] font-bold uppercase tracking-wider text-zinc-100 hover:border-amber-500/40">Save note</button>
+        </form>
+      </div>
+      <% } %>
+      <% } %>
+      </div>
+      <% } %>
+    </div>
+  </div>
+</li>

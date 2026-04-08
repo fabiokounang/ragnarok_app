@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#09090b">
+  <title><%= typeof title !== 'undefined' ? title : appDisplayName %></title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body class="auth-portal app-skin-light app-night-ui app-shell min-h-dvh font-ui text-zinc-100 antialiased" <%- include('../partials/music-body-attrs') %>>
+  <a href="#app-main" class="auth-skip">Skip to content</a>
+  <div class="auth-scene app-shell-scene launch-hero-ro-light relative flex h-dvh max-h-dvh min-h-0 flex-col overflow-hidden">
+    <div class="auth-grid" aria-hidden="true"></div>
+    <div class="auth-grid-slow pointer-events-none absolute inset-0" aria-hidden="true"></div>
+    <div class="pointer-events-none absolute inset-0 bg-auth-clouds" aria-hidden="true"></div>
+    <div class="auth-orb auth-orb-a" aria-hidden="true"></div>
+    <div class="auth-orb auth-orb-b" aria-hidden="true"></div>
+    <div class="auth-orb auth-orb-c" aria-hidden="true"></div>
+    <div class="pointer-events-none absolute inset-0 bg-auth-vignette-light" aria-hidden="true"></div>
+
+    <div class="auth-scroll relative z-10 flex min-h-0 flex-1 flex-col">
+      <div
+        class="app-shell-column mx-auto flex min-h-0 w-full max-w-md flex-1 flex-col pt-[env(safe-area-inset-top,0px)] pl-[env(safe-area-inset-left,0px)] pr-[env(safe-area-inset-right,0px)] sm:max-w-lg md:max-w-xl lg:max-w-2xl"
+      >
+        <%- include('../partials/app-header-light') %>
+        <main
+          id="app-main"
+          class="app-shell-main flex min-h-0 w-full min-w-0 flex-1 flex-col overflow-y-auto overscroll-y-contain pb-0 <%= typeof navActive === 'string' && navActive === 'profile' ? 'pt-0 sm:pt-0.5' : 'pt-3 sm:pt-4' %>"
+          tabindex="-1"
+        >
+          <div class="flex w-full min-w-0 flex-col">
+            <%- body %>
+          </div>
+          <div class="app-shell-nav-spacer shrink-0" aria-hidden="true"></div>
+        </main>
+      </div>
+    </div>
+  </div>
+  <%- include('../partials/app-nav-light') %>
+  <script src="/js/ambient-music.js" defer></script>
+</body>
+</html>

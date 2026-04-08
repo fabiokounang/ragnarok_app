@@ -1,0 +1,29 @@
+<div class="mb-4">
+  <a href="/profile" class="font-display text-[10px] font-bold uppercase tracking-wider text-zinc-500 hover:text-zinc-300">← Character</a>
+  <h1 class="mt-2 font-display text-2xl font-bold uppercase tracking-wide text-zinc-50 sm:text-3xl md:text-4xl">Slot <%= targetSlot %></h1>
+  <p class="mt-1 font-ui text-sm text-zinc-400">Pick a first job for this <strong class="text-zinc-200">empty</strong> slot only — you can’t replace a class later (remove the slot first if you need a different lineup). New class starts at <strong class="text-zinc-200">level 1</strong>. Dailies follow your <strong class="text-zinc-200">active</strong> job until you change it on Character.</p>
+</div>
+
+<% if (!jobs.length) { %>
+<p class="mt-auto rounded-xl border border-amber-500/35 bg-amber-950/40 px-3 py-3 font-ui text-sm text-amber-100">Every first job is already in another slot, or none are available.</p>
+<% } else { %>
+<ul class="mt-auto space-y-3">
+  <% jobs.forEach(function (j) { %>
+  <li>
+    <form action="/profile/job/slot" method="post" class="block" data-auth-form>
+      <input type="hidden" name="slot" value="<%= targetSlot %>" />
+      <input type="hidden" name="jobId" value="<%= j.id %>" />
+      <button
+        type="submit"
+        class="flex w-full items-center justify-between gap-3 rounded-2xl border border-zinc-600 bg-zinc-800/90 px-4 py-3 text-left shadow-md transition hover:border-zinc-500 hover:bg-zinc-800"
+      >
+        <span class="font-display text-sm font-bold uppercase tracking-wide text-zinc-100"><%= j.name %></span>
+        <span class="font-display text-[9px] font-bold uppercase tracking-wider text-zinc-500">Assign</span>
+      </button>
+    </form>
+  </li>
+  <% }); %>
+</ul>
+<% } %>
+
+<script src="/js/auth-ui.js" defer></script>

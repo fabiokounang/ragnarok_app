@@ -1,0 +1,101 @@
+## The basic idea
+
+A computer is a machine that stores information and follows instructions to transform that information. Those instructions are programs; the information is data — text, numbers, images, sound, sensor readings, whatever you feed it.
+
+What makes computers powerful is speed, reliability at repetition, and the ability to chain tiny steps into complex behavior. They do not “think” in a human sense; they execute rules very fast.
+
+That distinction matters when you expect magic. A spreadsheet that “knows” your business is really thousands of dumb steps written by people: add this cell, compare that value, format the result. The cleverness is in the design of those steps, not in silicon consciousness.
+
+## Parts you can point at
+
+Physically you often see a processor (CPU) that executes instructions, memory (RAM) that holds what the machine is working on right now, and storage (SSD/HDD) that keeps data when power is off. Phones pack the same roles into a smaller package.
+
+Input devices (keyboard, touchscreen, microphone) bring data in; output devices (screen, speakers, printer) send results out. Networks let computers talk to each other — that is how “the internet” becomes useful.
+
+RAM is fast but volatile: power off, and its contents are gone unless saved to storage. Storage is slower but persistent. Engineers constantly trade these layers so the machine feels responsive while still remembering your files.
+
+## Bits, logic, and programs
+
+Under the hood, modern computers represent almost everything as binary — ones and zeros — because electronic switches are good at being on or off. Logic gates combine those signals to add numbers, compare values, and decide branches.
+
+A program is a long recipe written in a language humans can read (with training) that is eventually translated into machine instructions the CPU understands. Compilers and interpreters do that translation; operating systems schedule which program runs when.
+
+## Why so many kinds
+
+A smartwatch, a gaming PC, and a data-center server are all computers tuned for different jobs: battery life, graphics, or serving millions of requests. Same core idea, different tradeoffs.
+
+Embedded computers live inside cars, appliances, and medical gear — often with no screen, quietly enforcing safety limits or fuel efficiency. Supercomputers chase physics simulations and weather models. The family tree is wide because “compute this reliably” shows up everywhere.
+
+## How to use this mental model
+
+When something breaks, ask: is it hardware (won’t turn on, cracked screen), software (app crashes, wrong output), data (corrupt file), or connection (network path)? Naming the layer saves hours of random clicking.
+
+## Deeper dive — part 1
+
+Accessibility (WCAG) is not charity; it improves SEO, mobile usability, and compliance risk — keyboard paths and contrast help everyone on a sunny patio.
+
+Technical debt is postponed work with interest; not all debt is bad — deliberate shortcuts to learn can be fine if scheduled for paydown.
+
+Feature flags decouple deploy from release, letting teams test in production with small cohorts — but flag sprawl becomes configuration spaghetti without cleanup discipline.
+
+Encryption at rest protects disks; encryption in transit protects paths; neither stops a malicious insider with legitimate credentials — governance and auditing complete the picture.
+
+## Deeper dive — part 2
+
+Container images should be minimal and scanned for CVEs; “it works on my laptop” images bloated with debug tools multiply attack surface in clusters.
+
+Postmortems blame systems and processes, not individuals, when culture is healthy; revenge postmortems teach people to hide facts next time.
+
+Rate limiting and backoff protect shared infrastructure from accidental storms and hostile floods; polite clients exponential-backoff automatically.
+
+Static typing catches classes of errors early; dynamic languages move fast early and pay in refactors — team maturity and domain volatility influence the trade.
+
+## Deeper dive — part 3
+
+Git history is communication; “WIP” commits and meaningless messages waste future you’s time when bisecting a regression at 2 a.m.
+
+Testing pyramids favor many fast unit tests, fewer integration tests, and rare end-to-end flakiness machines — inverted pyramids slow teams and erode trust in CI.
+
+Vendor lock-in is not always evil — managed databases save talent for product features — but exit plans should exist before contracts auto-renew at punitive rates.
+
+Data residency laws may require certain records stay in-country; multi-region architecture is not only performance but legal partitioning.
+
+## Deeper dive — part 4
+
+Open source licenses matter: copyleft can infect proprietary bundles; legal review on dependencies belongs in CI, not only release week panic.
+
+Disaster recovery drills prove backups restore; untested backups are hope, not strategy, when ransomware strikes Friday evening.
+
+On-device ML versus cloud inference trades privacy, battery, and model size; hybrid approaches sync improvements when online with graceful offline degradation.
+
+Semantic versioning communicates intent if you honor it; breaking changes in minor releases train users to fear upgrades.
+
+## Deeper dive — part 5
+
+Developer experience investments — docs, local dev scripts, seed data — compound; every hour saved per engineer per week pays rent on a senior salary.
+
+Supply chain attacks via compromised packages push teams toward pinning hashes, private registries, and reviewing diffs on updates — tedious and necessary.
+
+Latency budgets force engineers to choose: a millisecond in a high-frequency trading loop is eternity; a millisecond in a human-facing form submit is invisible — context sets targets.
+
+Idempotency keys let clients retry network requests without double-charging a card; designing APIs for safe retries is part of reliability, not an afterthought.
+
+## Deeper dive — part 6
+
+Caching trades freshness for speed; cache invalidation and naming things remain hard problems because stale data can mislead users subtly.
+
+Observability combines metrics, logs, and traces so on-call engineers can ask novel questions post-incident, not only answer pre-baked dashboards.
+
+Least privilege for service accounts limits blast radius when a credential leaks; overly broad IAM roles are convenience debt that attackers love.
+
+Unicode and time zones are where innocent features go to die; internationalization is not translation alone — it is calendars, collation, and legal address formats.
+
+## Deeper dive — part 7
+
+Accessibility (WCAG) is not charity; it improves SEO, mobile usability, and compliance risk — keyboard paths and contrast help everyone on a sunny patio.
+
+Technical debt is postponed work with interest; not all debt is bad — deliberate shortcuts to learn can be fine if scheduled for paydown.
+
+Feature flags decouple deploy from release, letting teams test in production with small cohorts — but flag sprawl becomes configuration spaghetti without cleanup discipline.
+
+Encryption at rest protects disks; encryption in transit protects paths; neither stops a malicious insider with legitimate credentials — governance and auditing complete the picture.

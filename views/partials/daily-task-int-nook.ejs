@@ -1,0 +1,91 @@
+<%
+  var intReadSlug = '';
+  var _slug = locals && locals.taskSlug;
+  if (_slug != null && String(_slug).trim() !== '') {
+    intReadSlug = String(_slug);
+  }
+  var intReadSectionId = 'nook';
+  var _nook = locals && locals.nookId;
+  if (_nook != null && String(_nook).trim() !== '') {
+    intReadSectionId = String(_nook);
+  }
+  var grimoirePathSlug = intReadSlug ? intReadSlug : 'default';
+  const bySlug = {
+    int_spell_read: {
+      kicker: 'Grimoire library',
+      lead: 'Library has folders: IT, Business, Economy, Mind & habits — each with long, detailed reads (e.g. what is a computer, how the internet works).',
+      bullets: [
+        '“Open full library” picks one long article per day for this quest; use Browse to open any folder.',
+        'Your own book or course still counts for the quest window.',
+      ],
+    },
+    int_cast_lesson: {
+      kicker: 'Grimoire library',
+      lead: 'Same library — Mind & habits, IT, Business, Economy — multiple articles per folder.',
+      bullets: [
+        'Daily pick rotates; Library → pick a folder → pick an article.',
+        'Bring your own lesson material if you prefer.',
+      ],
+    },
+    int_map_day: {
+      kicker: 'Grimoire library',
+      lead: 'Economy and Business folders include supply & demand, GDP, starting a business, cash flow, and more.',
+      bullets: [
+        'Open full library for today’s pick, or Browse → Economy / Business for every article.',
+        'Your own planner or book still counts.',
+      ],
+    },
+  };
+  const pick = bySlug[intReadSlug] || {
+    kicker: 'Grimoire library',
+    lead: 'Four topic folders, many articles each — IT, Business, Economy, Mind & habits.',
+    bullets: [
+      'Library → category → article. Full library link = one rotating long read per day.',
+      'Single-task focus is what you train; reading source is your choice.',
+    ],
+  };
+%>
+<details class="daily-int-nook daily-int-nook__fold">
+  <summary class="daily-int-nook__sum" id="daily-int-nook-heading-<%= intReadSectionId %>">
+    <span class="daily-int-nook__sum-row">
+      <span class="daily-int-nook__title font-display text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-100">
+        Grimoire — reading &amp; learning
+      </span>
+      <span class="daily-int-nook__sum-meta">
+        <span class="daily-int-nook__sum-hint font-ui text-[10px] font-medium text-zinc-400 sm:text-[11px]">Tap to read</span>
+        <span class="daily-int-nook__chev text-zinc-500" aria-hidden="true">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </span>
+      </span>
+    </span>
+  </summary>
+  <div class="daily-int-nook__drawer">
+    <p class="daily-int-nook__choice font-ui text-[11px] leading-relaxed text-zinc-400 sm:text-[12px]">
+      <strong class="font-semibold text-zinc-100">Your choice:</strong> read with our notes below, or use <strong class="font-semibold text-zinc-100">your own book / article / course</strong> for the same time window — both count when you honor the quest honestly.
+    </p>
+    <p class="daily-int-nook__read font-ui mt-2.5 text-[11px] leading-snug text-zinc-400 sm:text-[12px]">
+      <a
+        href="/daily/grimoire/<%= grimoirePathSlug %>"
+        class="daily-int-nook__read-link font-semibold text-violet-300 underline decoration-violet-500/50 underline-offset-[3px] transition-colors hover:text-violet-200 hover:decoration-violet-400/80"
+      >Open full library</a>
+      <span class="text-zinc-500"> — today’s long read (rotates by date). </span>
+      <a
+        href="/daily/grimoire/browse"
+        class="font-semibold text-violet-300 underline decoration-violet-500/50 underline-offset-[3px] transition-colors hover:text-violet-200 hover:decoration-violet-400/80"
+      >Browse all topics</a>
+      <span class="text-zinc-500"> anytime.</span>
+    </p>
+    <div class="daily-int-nook__panel rounded-xl border border-zinc-600 bg-gradient-to-br from-zinc-900 to-zinc-800/90 px-3.5 py-3 shadow-md shadow-black/25 sm:px-4 sm:py-3.5">
+      <p class="daily-int-nook__kicker font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-zinc-500"><%= pick.kicker %></p>
+      <p class="daily-int-nook__lead mt-1.5 font-ui text-[11px] leading-relaxed text-zinc-300 sm:text-[12px]"><%= pick.lead %></p>
+      <ul class="daily-int-nook__list mt-2.5 space-y-2 font-ui text-[11px] leading-snug text-zinc-400 sm:text-[12px] sm:leading-relaxed">
+        <% pick.bullets.forEach(function (line) { %>
+        <li class="daily-int-nook__li flex gap-2">
+          <span class="daily-int-nook__bullet mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-violet-500/90" aria-hidden="true"></span>
+          <span><%= line %></span>
+        </li>
+        <% }); %>
+      </ul>
+    </div>
+  </div>
+</details>

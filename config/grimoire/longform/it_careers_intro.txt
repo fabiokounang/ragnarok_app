@@ -1,0 +1,117 @@
+## Common paths
+
+Help desk / IT support fixes user issues and learns systems. Sysadmins and cloud engineers run servers and automation. Network specialists focus on connectivity. Security analysts hunt intrusions and misconfigurations.
+
+Developers build software; data roles model and analyze information; UX and product roles shape what gets built. QA tests quality. Many people move sideways as they learn.
+
+Site reliability engineering (SRE) blends coding and ops to keep large services up; DevOps culture emphasizes automation and shared ownership between dev and ops teams.
+
+## How people grow
+
+Projects, certifications, and degrees all help — none alone guarantees a job. Employers look for problem-solving, communication, and evidence you can learn. Build small things, document them, contribute to open source or local nonprofits.
+
+Interview loops often include coding tests for engineers, take-home designs for UX, and scenario questions for support — practicing aloud explanations matters as much as syntax.
+
+## Ethics and burnout
+
+You may hold keys to sensitive data; confidentiality and honest disclosure of limits are professional duties. On-call rotations and alert noise burn people out — sustainable teams invest in runbooks and fix root causes, not only silence alarms.
+
+## Deeper dive — part 1
+
+On-device ML versus cloud inference trades privacy, battery, and model size; hybrid approaches sync improvements when online with graceful offline degradation.
+
+Semantic versioning communicates intent if you honor it; breaking changes in minor releases train users to fear upgrades.
+
+Developer experience investments — docs, local dev scripts, seed data — compound; every hour saved per engineer per week pays rent on a senior salary.
+
+Supply chain attacks via compromised packages push teams toward pinning hashes, private registries, and reviewing diffs on updates — tedious and necessary.
+
+## Deeper dive — part 2
+
+Latency budgets force engineers to choose: a millisecond in a high-frequency trading loop is eternity; a millisecond in a human-facing form submit is invisible — context sets targets.
+
+Idempotency keys let clients retry network requests without double-charging a card; designing APIs for safe retries is part of reliability, not an afterthought.
+
+Caching trades freshness for speed; cache invalidation and naming things remain hard problems because stale data can mislead users subtly.
+
+Observability combines metrics, logs, and traces so on-call engineers can ask novel questions post-incident, not only answer pre-baked dashboards.
+
+## Deeper dive — part 3
+
+Least privilege for service accounts limits blast radius when a credential leaks; overly broad IAM roles are convenience debt that attackers love.
+
+Unicode and time zones are where innocent features go to die; internationalization is not translation alone — it is calendars, collation, and legal address formats.
+
+Accessibility (WCAG) is not charity; it improves SEO, mobile usability, and compliance risk — keyboard paths and contrast help everyone on a sunny patio.
+
+Technical debt is postponed work with interest; not all debt is bad — deliberate shortcuts to learn can be fine if scheduled for paydown.
+
+## Deeper dive — part 4
+
+Feature flags decouple deploy from release, letting teams test in production with small cohorts — but flag sprawl becomes configuration spaghetti without cleanup discipline.
+
+Encryption at rest protects disks; encryption in transit protects paths; neither stops a malicious insider with legitimate credentials — governance and auditing complete the picture.
+
+Container images should be minimal and scanned for CVEs; “it works on my laptop” images bloated with debug tools multiply attack surface in clusters.
+
+Postmortems blame systems and processes, not individuals, when culture is healthy; revenge postmortems teach people to hide facts next time.
+
+## Deeper dive — part 5
+
+Rate limiting and backoff protect shared infrastructure from accidental storms and hostile floods; polite clients exponential-backoff automatically.
+
+Static typing catches classes of errors early; dynamic languages move fast early and pay in refactors — team maturity and domain volatility influence the trade.
+
+Git history is communication; “WIP” commits and meaningless messages waste future you’s time when bisecting a regression at 2 a.m.
+
+Testing pyramids favor many fast unit tests, fewer integration tests, and rare end-to-end flakiness machines — inverted pyramids slow teams and erode trust in CI.
+
+## Deeper dive — part 6
+
+Vendor lock-in is not always evil — managed databases save talent for product features — but exit plans should exist before contracts auto-renew at punitive rates.
+
+Data residency laws may require certain records stay in-country; multi-region architecture is not only performance but legal partitioning.
+
+Open source licenses matter: copyleft can infect proprietary bundles; legal review on dependencies belongs in CI, not only release week panic.
+
+Disaster recovery drills prove backups restore; untested backups are hope, not strategy, when ransomware strikes Friday evening.
+
+## Deeper dive — part 7
+
+On-device ML versus cloud inference trades privacy, battery, and model size; hybrid approaches sync improvements when online with graceful offline degradation.
+
+Semantic versioning communicates intent if you honor it; breaking changes in minor releases train users to fear upgrades.
+
+Developer experience investments — docs, local dev scripts, seed data — compound; every hour saved per engineer per week pays rent on a senior salary.
+
+Supply chain attacks via compromised packages push teams toward pinning hashes, private registries, and reviewing diffs on updates — tedious and necessary.
+
+## Deeper dive — part 8
+
+Latency budgets force engineers to choose: a millisecond in a high-frequency trading loop is eternity; a millisecond in a human-facing form submit is invisible — context sets targets.
+
+Idempotency keys let clients retry network requests without double-charging a card; designing APIs for safe retries is part of reliability, not an afterthought.
+
+Caching trades freshness for speed; cache invalidation and naming things remain hard problems because stale data can mislead users subtly.
+
+Observability combines metrics, logs, and traces so on-call engineers can ask novel questions post-incident, not only answer pre-baked dashboards.
+
+## Deeper dive — part 9
+
+Least privilege for service accounts limits blast radius when a credential leaks; overly broad IAM roles are convenience debt that attackers love.
+
+Unicode and time zones are where innocent features go to die; internationalization is not translation alone — it is calendars, collation, and legal address formats.
+
+Accessibility (WCAG) is not charity; it improves SEO, mobile usability, and compliance risk — keyboard paths and contrast help everyone on a sunny patio.
+
+Technical debt is postponed work with interest; not all debt is bad — deliberate shortcuts to learn can be fine if scheduled for paydown.
+
+## Deeper dive — part 10
+
+Feature flags decouple deploy from release, letting teams test in production with small cohorts — but flag sprawl becomes configuration spaghetti without cleanup discipline.
+
+Encryption at rest protects disks; encryption in transit protects paths; neither stops a malicious insider with legitimate credentials — governance and auditing complete the picture.
+
+Container images should be minimal and scanned for CVEs; “it works on my laptop” images bloated with debug tools multiply attack surface in clusters.
+
+Postmortems blame systems and processes, not individuals, when culture is healthy; revenge postmortems teach people to hide facts next time.

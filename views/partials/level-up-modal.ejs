@@ -1,0 +1,57 @@
+<div
+  id="lvlup-root"
+  class="lvlup-root hidden"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="lvlup-heading"
+  aria-hidden="true"
+>
+  <div class="lvlup-root__backdrop" data-lvlup-close tabindex="-1"></div>
+  <div class="lvlup-root__card">
+    <div class="lvlup-root__glow" aria-hidden="true"></div>
+    <p class="lvlup-root__eyebrow font-mono">Adventurer rank</p>
+    <h2 id="lvlup-heading" class="lvlup-root__title font-display">Level up!</h2>
+    <p id="lvlup-sub" class="lvlup-root__sub font-ui"></p>
+
+    <div class="lvlup-root__exp-block">
+      <p class="lvlup-root__exp-label font-mono">Experience gained</p>
+      <p class="lvlup-root__exp-num font-display">
+        +<span id="lvlup-exp-disp" class="tabular-nums">0</span>
+        <span class="lvlup-root__exp-suffix">EXP</span>
+      </p>
+      <div class="lvlup-root__bar-track">
+        <div id="lvlup-exp-bar" class="lvlup-root__bar-fill" style="width: 0%"></div>
+      </div>
+      <p class="lvlup-root__bar-cap font-mono"><span id="lvlup-xp-pct">0</span>% toward next level</p>
+    </div>
+
+    <div class="lvlup-root__level-jump font-display">
+      <span class="lvlup-root__lv-old tabular-nums" id="lvlup-lv-from">1</span>
+      <span class="lvlup-root__arrow" aria-hidden="true">→</span>
+      <span class="lvlup-root__lv-new tabular-nums" id="lvlup-lv-to">2</span>
+    </div>
+
+    <div id="lvlup-sp-block" class="lvlup-root__sp hidden">
+      <p class="lvlup-root__sp-title font-mono">Stat points</p>
+      <p id="lvlup-sp-text" class="lvlup-root__sp-text font-ui"></p>
+    </div>
+
+    <div class="lvlup-root__stats-info">
+      <p class="lvlup-root__stats-title font-mono">Spend stat points</p>
+      <p class="lvlup-root__stats-lead font-ui">
+        Points go to your <strong class="font-semibold text-zinc-100">active job</strong> only. Open <strong class="font-semibold text-sky-300">Character</strong> → <strong class="font-semibold text-zinc-100">Stats — active job only</strong> to add STR, AGI, VIT, INT, DEX, or LUK.
+      </p>
+      <ul class="lvlup-root__stats-list font-ui" aria-label="Stat glossary">
+        <li><span class="font-bold">STR</span> — physical power &amp; load</li>
+        <li><span class="font-bold">AGI</span> — speed &amp; evasion-style cardio</li>
+        <li><span class="font-bold">VIT</span> — endurance &amp; recovery</li>
+        <li><span class="font-bold">INT</span> — knowledge &amp; focus</li>
+        <li><span class="font-bold">DEX</span> — precision &amp; rhythm</li>
+        <li><span class="font-bold">LUK</span> — habits &amp; small wins</li>
+      </ul>
+    </div>
+
+    <a href="/profile" class="lvlup-root__link font-display">Open Character</a>
+    <button type="button" class="lvlup-root__btn font-display" data-lvlup-close>Continue</button>
+  </div>
+</div>

@@ -1,0 +1,215 @@
+<% const s = typeof gameUser !== 'undefined' && gameUser.stats ? gameUser.stats : { str: 1, agi: 1, vit: 1, int: 1, dex: 1, luk: 1 }; %>
+<% const pts = typeof gameUser !== 'undefined' && gameUser.statPointsUnspent != null ? gameUser.statPointsUnspent : 0; %>
+<% const cap = 99; %>
+<% const slots = typeof jobSlots !== 'undefined' && Array.isArray(jobSlots) ? jobSlots : []; %>
+<% const filledSlotCount = slots.filter(function (x) { return !x.empty; }).length; %>
+<% const activeJobName = typeof gameUser !== 'undefined' && gameUser.job ? gameUser.job : '—'; %>
+
+<!-- <header class="profile-character-head p-4 mb-2 border-b border-zinc-600/40 pb-2 sm:mb-2.5 sm:pb-2.5">
+  <h1 class="font-display text-lg font-bold uppercase tracking-[0.08em] text-zinc-100 sm:text-xl md:text-2xl leading-tight">Character</h1>
+  <p class="mt-1 max-w-lg font-ui text-[11px] leading-snug text-zinc-400 sm:text-[12px] sm:leading-snug">
+    Below is your <strong class="font-semibold text-zinc-200">lineup and stats</strong>. The card above has <strong class="font-semibold text-zinc-200">character</strong>, <strong class="font-semibold text-zinc-200">account shortcuts</strong>, and <strong class="font-semibold text-zinc-200">in-app music</strong> — no repeated name.
+  </p>
+</header> -->
+
+<div class="profile-page w-full min-w-0 px-4 pb-8 pt-2 sm:px-5 sm:pt-3 md:px-6">
+<div
+  id="profile-stat-toast"
+  class="mb-4 hidden rounded-xl border border-emerald-500/35 bg-emerald-950/40 px-3 py-2 text-center font-ui text-[13px] font-semibold text-emerald-200"
+  role="status"
+  aria-live="polite"
+  aria-atomic="true"
+></div>
+<% if (typeof profileStatOk !== 'undefined' && profileStatOk) { %>
+<div class="mb-4 rounded-xl border border-emerald-500/35 bg-emerald-950/40 px-3 py-2 text-center font-ui text-[13px] font-semibold text-emerald-200" role="status">Stat increased for your active job.</div>
+<% } %>
+
+<% if (typeof jobFlash !== 'undefined' && jobFlash && jobFlash.text) { %>
+<div
+  class="mb-4 rounded-xl border px-3 py-2 text-center font-ui text-[13px] font-semibold <%= jobFlash.type === 'err' ? 'border-red-500/40 bg-red-950/45 text-red-100' : 'border-emerald-500/35 bg-emerald-950/40 text-emerald-200' %>"
+  role="status"
+>
+  <%= jobFlash.text %>
+</div>
+<% } %>
+
+<% if (typeof musicFlash !== 'undefined' && musicFlash && musicFlash.text) { %>
+<div class="mb-4 rounded-xl border border-sky-500/30 bg-sky-950/40 px-3 py-2 text-center font-ui text-[13px] font-semibold text-sky-200" role="status">
+  <%= musicFlash.text %>
+</div>
+<% } %>
+
+<!-- Job slots: active class matches header & dailies -->
+<section class="mt-4 mb-4 rounded-2xl border border-zinc-700/80 bg-gradient-to-br from-zinc-900 to-zinc-800 p-5 shadow-lg shadow-black/30 md:rounded-3xl md:p-6" aria-labelledby="slots-heading">
+  <div class="border-b border-zinc-700/60 pb-3">
+    <h2 id="slots-heading" class="font-display text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-300">Job slots</h2>
+    <p class="mt-1 font-ui text-[12px] leading-relaxed text-zinc-400">
+      The <strong class="text-zinc-200">active</strong> slot is the one in the top card — <strong class="text-zinc-200">Daily</strong> and <strong class="text-zinc-200">EXP</strong> go there only. Up to <strong class="text-zinc-200">three</strong> first jobs; <strong class="text-zinc-200">add</strong> only to <strong class="text-zinc-200">empty</strong> slots. When your <strong class="text-zinc-200">active</strong> job is a first class, you can <strong class="text-zinc-200">advance</strong> to a second job below (after gates). Use <strong class="text-zinc-200">Set active</strong> to switch class.
+    </p>
+  </div>
+  <ul class="mt-3 space-y-2">
+    <% slots.forEach(function (row) { %>
+    <li class="flex flex-wrap items-center gap-2 rounded-xl border border-zinc-700/80 bg-zinc-900/90 px-3 py-2.5 shadow-sm">
+      <span class="font-mono text-[10px] font-bold tabular-nums text-zinc-500">Slot <%= row.slot %></span>
+      <% if (row.empty) { %>
+      <span class="font-ui text-sm text-zinc-500">Empty</span>
+      <a href="/profile/jobs/add?slot=<%= row.slot %>" class="ml-auto inline-flex rounded-lg border border-sky-600/50 bg-sky-950/50 px-2.5 py-1 font-display text-[9px] font-bold uppercase tracking-wider text-sky-200 hover:border-sky-500">Add class</a>
+      <% } else { %>
+      <span class="font-ui text-sm font-semibold text-zinc-200"><%= row.name %></span>
+      <span class="rounded-md border border-zinc-600 bg-zinc-800/90 px-2 py-0.5 font-mono text-[10px] font-bold tabular-nums text-zinc-300">Lv <%= row.level != null ? row.level : 1 %></span>
+      <% if (row.isActive) { %>
+      <span class="rounded-md border border-emerald-500/40 bg-emerald-950/50 px-2 py-0.5 font-display text-[8px] font-bold uppercase tracking-wider text-emerald-200">Active</span>
+      <% } else { %>
+      <form action="/profile/job/active" method="post" class="ml-auto inline" data-auth-form>
+        <input type="hidden" name="jobId" value="<%= row.jobId %>" />
+        <button type="submit" class="rounded-lg border border-zinc-600/70 bg-zinc-900 px-2.5 py-1 font-display text-[9px] font-bold uppercase tracking-wider text-zinc-100 hover:border-[#d4a017]/45">Set active</button>
+      </form>
+      <% } %>
+      <% if (filledSlotCount > 1) { %>
+      <form action="/profile/job/remove" method="post" class="inline" data-auth-form onsubmit="return confirm('Remove this class from slot <%= row.slot %>?');">
+        <input type="hidden" name="slot" value="<%= row.slot %>" />
+        <button type="submit" class="rounded-lg border border-rose-500/40 bg-rose-950/40 px-2.5 py-1 font-display text-[9px] font-bold uppercase tracking-wider text-rose-200 hover:border-rose-400/60">Remove</button>
+      </form>
+      <% } %>
+      <% } %>
+    </li>
+    <% }); %>
+  </ul>
+</section>
+
+<% if (typeof jobAdvance !== 'undefined' && jobAdvance && jobAdvance.targets && jobAdvance.targets.length) { %>
+<% const p = jobAdvance.progress || {}; %>
+<% const g = jobAdvance.targets[0]; %>
+<section class="mb-4 rounded-2xl border border-violet-700/50 bg-gradient-to-br from-zinc-900 to-violet-950/40 p-5 shadow-lg shadow-black/30 md:rounded-3xl md:p-6" aria-labelledby="advance-heading">
+  <div class="border-b border-violet-800/40 pb-3">
+    <h2 id="advance-heading" class="font-display text-[10px] font-bold uppercase tracking-[0.2em] text-violet-200">Advance class</h2>
+    <p class="mt-1 font-ui text-[12px] leading-relaxed text-zinc-400">
+      Second jobs unlock when you meet <strong class="text-zinc-200">all</strong> gates on your <strong class="text-zinc-200">active</strong> first job. Quests count lifetime completions for this job’s daily + weekly task pool; bosses are weekly boss clears for this line; streak is your current login streak.
+    </p>
+  </div>
+  <ul class="mt-3 space-y-1.5 rounded-xl border border-zinc-700/80 bg-zinc-900/90 px-3 py-2.5 font-ui text-[11px] text-zinc-300">
+    <li class="flex flex-wrap justify-between gap-1">
+      <span>Class level (from EXP)</span>
+      <span class="font-mono font-semibold tabular-nums <%= (p.level || 0) >= (g.minLevel || 0) ? 'text-emerald-400' : 'text-amber-400' %>"><%= p.level != null ? p.level : 0 %> / <%= g.minLevel %></span>
+    </li>
+    <li class="flex flex-wrap justify-between gap-1">
+      <span>Quests (dailies + weeklies, this pool)</span>
+      <span class="font-mono font-semibold tabular-nums <%= (p.questsDone || 0) >= (g.minQuests || 0) ? 'text-emerald-400' : 'text-amber-400' %>"><%= p.questsDone != null ? p.questsDone : 0 %> / <%= g.minQuests %></span>
+    </li>
+    <li class="flex flex-wrap justify-between gap-1">
+      <span>Weekly boss clears</span>
+      <span class="font-mono font-semibold tabular-nums <%= (p.bossWins || 0) >= (g.minBoss || 0) ? 'text-emerald-400' : 'text-amber-400' %>"><%= p.bossWins != null ? p.bossWins : 0 %> / <%= g.minBoss %></span>
+    </li>
+    <li class="flex flex-wrap justify-between gap-1">
+      <span>Login streak (days)</span>
+      <span class="font-mono font-semibold tabular-nums <%= (p.streak || 0) >= (g.minStreak || 0) ? 'text-emerald-400' : 'text-amber-400' %>"><%= p.streak != null ? p.streak : 0 %> / <%= g.minStreak %></span>
+    </li>
+  </ul>
+  <ul class="mt-4 space-y-3">
+    <% jobAdvance.targets.forEach(function (t) { %>
+    <li class="rounded-xl border border-zinc-700/80 bg-zinc-900/95 px-3 py-3 shadow-sm">
+      <div class="flex flex-wrap items-baseline justify-between gap-2">
+        <span class="font-ui text-sm font-semibold text-zinc-100"><%= t.name %></span>
+        <% if (t.ready) { %>
+        <span class="rounded-md border border-emerald-500/40 bg-emerald-950/50 px-2 py-0.5 font-display text-[8px] font-bold uppercase tracking-wider text-emerald-200">Ready</span>
+        <% } else { %>
+        <span class="rounded-md border border-zinc-600 bg-zinc-800/90 px-2 py-0.5 font-display text-[8px] font-bold uppercase tracking-wider text-zinc-400">Locked</span>
+        <% } %>
+      </div>
+      <% if (t.description) { %>
+      <p class="mt-1 font-ui text-[11px] leading-snug text-zinc-400"><%= t.description %></p>
+      <% } %>
+      <% if (t.ready) { %>
+      <form action="/profile/job/advance" method="post" class="mt-2" data-auth-form onsubmit="return confirm('Advance to <%= t.name %>? This replaces your active first job in its slot.');">
+        <input type="hidden" name="toJobId" value="<%= t.toJobId %>" />
+        <button type="submit" class="w-full rounded-lg border border-violet-500/50 bg-violet-600/30 py-2 font-display text-[9px] font-bold uppercase tracking-wider text-violet-100 hover:bg-violet-600/45 sm:w-auto sm:px-4">
+          Advance to <%= t.name %>
+        </button>
+      </form>
+      <% } %>
+    </li>
+    <% }); %>
+  </ul>
+</section>
+<% } %>
+
+<!-- Stats: only active job -->
+<section
+  id="profile-stats-section"
+  class="mb-4 space-y-3 rounded-2xl border border-indigo-800/50 bg-gradient-to-br from-zinc-900 via-indigo-950/30 to-zinc-900 p-5 shadow-lg shadow-black/30 md:rounded-3xl md:p-6"
+  aria-labelledby="stats-heading"
+>
+  <div class="flex flex-wrap items-center justify-between gap-2 border-b border-indigo-800/40 pb-3">
+    <div>
+      <h2 id="stats-heading" class="font-display text-[10px] font-bold uppercase tracking-[0.2em] text-indigo-200">Stats — active job only</h2>
+      <p class="mt-1 font-ui text-[11px] leading-snug text-zinc-400">
+        These numbers are for <strong class="text-zinc-200"><%= activeJobName %></strong> only. Other slots keep their own stats when you switch active job.
+      </p>
+    </div>
+    <span
+      id="profile-stat-points-badge"
+      class="rounded-full border border-amber-500/40 bg-amber-950/40 px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-wider text-amber-200 <%= pts > 0 ? '' : 'hidden' %>"
+    >
+      <span data-stat-pts-num class="tabular-nums"><%= pts %></span> to spend
+    </span>
+  </div>
+  <p class="font-ui text-[12px] leading-relaxed text-zinc-400">
+    <strong class="text-zinc-200">STR / AGI / VIT / INT / DEX / LUK</strong> — RO-style pillars. You get <strong class="text-zinc-200">3 stat points per level-up</strong> on the active job; spend them here.
+  </p>
+  <ul class="grid grid-cols-2 gap-2 sm:grid-cols-3">
+    <% const statRows = [
+      { key: 'str', label: 'STR', hint: 'Power' },
+      { key: 'agi', label: 'AGI', hint: 'Speed' },
+      { key: 'vit', label: 'VIT', hint: 'Endurance' },
+      { key: 'int', label: 'INT', hint: 'Focus' },
+      { key: 'dex', label: 'DEX', hint: 'Precision' },
+      { key: 'luk', label: 'LUK', hint: 'Habits' },
+    ]; %>
+    <% statRows.forEach(function (row) { %>
+    <% const v = typeof s[row.key] === 'number' ? s[row.key] : 1; %>
+    <% const canAdd = pts > 0 && v < cap; %>
+    <li class="flex flex-col rounded-xl border border-zinc-700/80 bg-zinc-900/90 px-2.5 py-2 shadow-sm" data-stat-row="<%= row.key %>">
+      <div class="flex items-baseline justify-between gap-1">
+        <span class="font-display text-[11px] font-bold text-zinc-100"><%= row.label %></span>
+        <span class="font-mono text-lg font-extrabold tabular-nums text-zinc-50" data-stat-value><%= v %></span>
+      </div>
+      <span class="font-ui text-[10px] text-zinc-500"><%= row.hint %></span>
+      <div class="mt-2 min-h-[2.25rem]" data-stat-action-wrap>
+        <form
+          action="/profile/stat"
+          method="post"
+          class="w-full <%= canAdd ? '' : 'hidden' %>"
+          data-profile-stat-form
+        >
+          <input type="hidden" name="stat" value="<%= row.key %>" />
+          <button
+            type="submit"
+            class="profile-stat-plus-btn w-full rounded-lg border border-zinc-500 bg-zinc-800 py-1.5 font-display text-[9px] font-bold uppercase tracking-wider text-zinc-100 transition hover:bg-zinc-700 disabled:opacity-60"
+          >
+            <span class="profile-stat-plus-label">+1</span>
+            <span class="profile-stat-plus-spinner ml-1 hidden inline-block h-3 w-3 animate-spin rounded-full border-2 border-[#1e5a8a]/30 border-t-[#1e5a8a]" aria-hidden="true"></span>
+          </button>
+        </form>
+        <p
+          data-stat-max
+          class="mt-1 font-mono text-[9px] font-bold uppercase tracking-wider text-zinc-500 <%= v >= cap ? '' : 'hidden' %>"
+        >
+          Max
+        </p>
+        <div data-stat-placeholder class="h-8 <%= canAdd || v >= cap ? 'hidden' : '' %>" aria-hidden="true"></div>
+      </div>
+    </li>
+    <% }); %>
+  </ul>
+</section>
+</div>
+
+<% if (typeof showJobWelcomeModal !== 'undefined' && showJobWelcomeModal && typeof jobWelcomeKind === 'string') { %>
+<%- include('../partials/job-welcome-modal') %>
+<% } %>
+
+<script src="/js/auth-ui.js" defer></script>
+<script src="/js/profile-stats.js" defer></script>
+<% if (typeof showJobWelcomeModal !== 'undefined' && showJobWelcomeModal) { %>
+<script src="/js/job-welcome-modal.js" defer></script>
+<% } %>

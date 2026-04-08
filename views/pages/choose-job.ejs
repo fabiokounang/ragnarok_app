@@ -1,0 +1,138 @@
+<% 
+function jobTeaser(desc) {
+  if (!desc) return '';
+  var s = String(desc).trim();
+  if (s.length <= 88) return s;
+  var cut = s.slice(0, 88);
+  var i = cut.lastIndexOf(' ');
+  return (i > 32 ? cut.slice(0, i) : cut) + '…';
+}
+%>
+
+<div class="auth-window-bar auth-window-bar--choose relative overflow-hidden flex min-h-[52px] items-center gap-3 px-3 py-2 sm:px-4">
+  <span class="choose-path-bar-shimmer pointer-events-none absolute inset-0 opacity-[0.12]" aria-hidden="true"></span>
+  <span class="auth-window-icon relative z-[1]" aria-hidden="true">◎</span>
+  <div class="relative z-[1] min-w-0 flex-1">
+    <span class="font-display block text-[10px] font-bold uppercase leading-tight tracking-[0.2em] text-white/95 sm:text-[11px] sm:tracking-[0.24em]">Job advancement</span>
+    <span class="mt-0.5 block font-display text-[9px] font-semibold uppercase tracking-[0.16em] text-white/60">Novice → first class</span>
+  </div>
+  <span class="auth-badge-free relative z-[1] font-display border-amber-100/50 bg-black/10 text-[9px] text-amber-50">Pick 1</span>
+</div>
+
+<div class="auth-window-body px-4 py-5 sm:px-6 sm:py-6">
+  <% if (typeof error === 'string' && error) { %>
+  <ul class="auth-alert mb-4 space-y-1.5 rounded-xl border border-red-500/40 bg-red-950/45 px-3 py-3 text-[15px] text-red-100 sm:px-4 sm:text-sm" role="alert">
+    <li class="flex gap-2 pl-0.5">
+      <span class="shrink-0 font-display font-bold text-red-500" aria-hidden="true">!</span>
+      <span><%= error %></span>
+    </li>
+  </ul>
+  <% } %>
+
+  <div class="choose-path-intro-float mb-4 rounded-2xl border border-zinc-600 bg-gradient-to-br from-zinc-900 to-zinc-800 px-4 py-3 shadow-md backdrop-blur-sm sm:px-5 sm:py-4">
+    <p class="auth-form-intro mb-1 font-display text-[10px] font-semibold uppercase tracking-[0.22em] text-zinc-400">Choose your path</p>
+    <p class="font-ui text-[15px] leading-relaxed text-zinc-300 sm:text-base">
+      Kamu sudah mencapai <strong class="font-semibold text-zinc-50">level <%= typeof noviceMinPickLevel !== 'undefined' ? noviceMinPickLevel : 10 %></strong> sebagai <strong class="font-semibold text-zinc-50">Novice</strong>. Pilih <strong class="font-semibold text-zinc-50">kelas pertama</strong> di bawah. Buka <strong class="font-semibold text-amber-300">Class manual</strong> untuk deskripsi lengkap — lalu konfirmasi.
+    </p>
+    <% if (typeof hasCommunityFavorite !== 'undefined' && hasCommunityFavorite) { %>
+    <p class="mt-2 flex flex-wrap items-center gap-2 font-ui text-[13px] text-zinc-400 sm:text-[14px]">
+      <span class="choose-path-fav-star text-lg leading-none text-amber-500 drop-shadow-sm" aria-hidden="true">★</span>
+      <span><span class="font-semibold text-zinc-100">Community favorite</span> — most-picked first job among adventurers (updates as people join).</span>
+    </p>
+    <% } %>
+  </div>
+
+  <ul class="choose-path-stack auth-form-stagger space-y-4">
+    <% jobs.forEach(function (j, idx) { %>
+    <% const isFav = typeof hasCommunityFavorite !== 'undefined' && hasCommunityFavorite && typeof favoriteJobIds !== 'undefined' && favoriteJobIds.indexOf(Number(j.id)) !== -1; %>
+    <li class="auth-stagger-item auth-d<%= Math.min(idx + 1, 7) %>">
+      <form action="/choose-job" method="post" class="block" data-auth-form>
+        <input type="hidden" name="jobId" value="<%= j.id %>" />
+        <div
+          class="choose-path-card group relative overflow-hidden rounded-2xl border border-zinc-600 bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 p-4 shadow-[0_10px_40px_-12px_rgba(0,0,0,0.5)] ring-1 ring-white/[0.04] backdrop-blur-md transition duration-300 ease-out hover:-translate-y-1 hover:border-zinc-500 hover:shadow-[0_20px_48px_-12px_rgba(0,0,0,0.55)] sm:p-5 <%= isFav ? 'choose-path-card--favorite border-amber-500/40 ring-amber-500/20' : '' %>"
+        >
+          <span class="choose-path-shimmer pointer-events-none absolute inset-0 rounded-2xl" aria-hidden="true"></span>
+
+          <% if (isFav) { %>
+          <div class="absolute right-3 top-3 z-[2] flex items-center gap-1 rounded-full border border-amber-500/40 bg-amber-950/50 px-2.5 py-1 shadow-sm">
+            <span class="choose-path-fav-star text-sm leading-none text-amber-400" aria-hidden="true">★</span>
+            <span class="font-display text-[8px] font-bold uppercase tracking-[0.14em] text-amber-200">Favorite</span>
+            <% if (typeof topPickCount !== 'undefined' && topPickCount > 0) { %>
+            <span class="font-display text-[8px] font-semibold tabular-nums text-amber-300/90">×<%= topPickCount %></span>
+            <% } %>
+          </div>
+          <% } %>
+
+          <div class="relative z-[1] flex gap-3 sm:gap-4">
+            <div class="choose-path-accent mt-0.5 w-1 shrink-0 rounded-full bg-gradient-to-b from-[#3d7ab8] via-[#d4a017] to-[#6b4c9a] shadow-inner" aria-hidden="true"></div>
+            <div class="min-w-0 flex-1 pr-1 <%= isFav ? 'sm:pr-24' : '' %>">
+              <div class="flex flex-wrap items-baseline gap-2">
+                <h2 class="font-display text-base font-bold uppercase tracking-[0.1em] text-zinc-50 sm:text-lg"><%= j.name %></h2>
+                <span class="rounded-md border border-zinc-600 bg-zinc-800/90 px-2 py-0.5 font-display text-[8px] font-semibold uppercase tracking-wider text-zinc-400">1st job</span>
+              </div>
+              <p class="mt-2 font-ui text-[15px] leading-relaxed text-zinc-400 sm:text-base"><%= jobTeaser(j.description) %></p>
+
+              <div class="mt-3 flex justify-end">
+                <button
+                  type="button"
+                  class="choose-job-manual-btn inline-flex items-center justify-center gap-1.5 rounded-lg border border-zinc-500 bg-zinc-800 px-3 py-2 font-display text-[9px] font-bold uppercase tracking-[0.14em] text-zinc-100 shadow-sm transition hover:border-zinc-400 hover:bg-zinc-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-500 sm:py-1.5"
+                  data-job-slug="<%= j.slug %>"
+                  data-job-id="<%= j.id %>"
+                >
+                  <span class="font-display text-[10px] text-amber-400" aria-hidden="true">✦</span>
+                  Class manual
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          class="launch-btn-primary auth-btn-ro relative mt-3 flex min-h-[48px] w-full items-center justify-center gap-2 overflow-hidden rounded-xl px-4 font-display text-xs font-bold uppercase tracking-[0.12em] sm:tracking-[0.14em]"
+        >
+          <span class="auth-btn-label">Begin as <%= j.name %></span>
+          <span class="auth-btn-spinner hidden h-5 w-5 shrink-0 animate-spin rounded-full border-2 border-white/35 border-t-white" aria-hidden="true"></span>
+        </button>
+      </form>
+    </li>
+    <% }); %>
+  </ul>
+
+  <dialog id="choose-job-dialog" class="ro-job-dialog" aria-labelledby="job-dialog-heading">
+    <div class="ro-job-dialog-panel">
+      <button type="button" class="ro-job-dialog-close" data-job-dialog-close aria-label="Close class manual">×</button>
+      <div class="ro-job-dialog-head">
+        <h2 id="job-dialog-heading" data-job-dialog-title class="min-w-0 flex-1 font-display text-lg font-bold uppercase tracking-[0.08em] text-zinc-50 sm:text-xl"></h2>
+        <span class="rounded-md border border-amber-500/40 bg-amber-950/50 px-2 py-0.5 font-display text-[8px] font-bold uppercase tracking-wider text-amber-200">1st job</span>
+      </div>
+      <div class="ro-job-dialog-body font-ui">
+        <section class="mb-5">
+          <h3 class="ro-job-dialog-section-title">Class overview</h3>
+          <p data-job-dialog-desc class="font-ui text-[16px] leading-relaxed text-zinc-300 sm:text-[17px]"></p>
+        </section>
+        <section>
+          <h3 class="ro-job-dialog-section-title">Evolution path</h3>
+          <div data-job-dialog-evolution class="mt-1"></div>
+        </section>
+      </div>
+      <div class="ro-job-dialog-foot">
+        <button type="button" data-job-dialog-close class="launch-btn-primary auth-btn-ro flex min-h-[46px] w-full items-center justify-center rounded-xl px-4 font-display text-xs font-bold uppercase tracking-[0.12em]">
+          Close manual
+        </button>
+      </div>
+    </div>
+  </dialog>
+
+  <div class="auth-card-footer auth-fade-late mt-6 rounded-2xl border border-zinc-700/80 bg-zinc-900/80 py-4 text-center shadow-inner sm:mt-7">
+    <p class="text-[13px] text-zinc-500 sm:text-sm">Wrong account or need a break?</p>
+    <form action="/logout" method="post" class="mt-2 inline">
+      <button type="submit" class="auth-link inline-flex min-h-[44px] items-center justify-center px-4 font-display text-sm font-semibold text-violet-300 hover:text-violet-200 sm:text-[15px]">
+        Sign out
+      </button>
+    </form>
+  </div>
+
+  <script type="application/json" id="choose-job-data"><%- typeof chooseJobClientJson !== 'undefined' ? chooseJobClientJson : '[]' %></script>
+  <script src="/js/choose-job.js" defer></script>
+</div>

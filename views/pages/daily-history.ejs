@@ -1,0 +1,203 @@
+<%
+  const s = typeof summary !== 'undefined' && summary ? summary : {};
+  const rows = typeof historyDays !== 'undefined' && Array.isArray(historyDays) ? historyDays : [];
+  const sc = typeof historyScope === 'string' && ['all', 'daily', 'weekly'].includes(historyScope) ? historyScope : 'all';
+  const rm = historyRangeMode === 'range' ? 'range' : 'preset';
+  const pd = [7, 30, 90].includes(Number(historyPresetDays)) ? Number(historyPresetDays) : 30;
+  const df = typeof historyDateFrom === 'string' ? historyDateFrom : '';
+  const dt = typeof historyDateTo === 'string' ? historyDateTo : '';
+  const hasEver = typeof hasAnyQuestHistoryEver === 'boolean' ? hasAnyQuestHistoryEver : true;
+  const ss = typeof streakSummary !== 'undefined' && streakSummary ? streakSummary : {};
+  function n(v) { return Number.isFinite(Number(v)) ? Number(v) : 0; }
+  const fmt = (iso) => {
+    try {
+      const d = new Date(String(iso) + 'T00:00:00');
+      return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    } catch {
+      return iso;
+    }
+  };
+  function journalUrl(over) {
+    const scope = over.scope != null ? over.scope : sc;
+    const p = new URLSearchParams();
+    p.set('scope', scope);
+    if (rm === 'range' && df && dt && over.usePreset !== true) {
+      p.set('from', over.from != null ? over.from : df);
+      p.set('to', over.to != null ? over.to : dt);
+    } else {
+      p.set('days', String(over.days != null ? over.days : pd));
+    }
+    return '/daily/history?' + p.toString();
+  }
+%>
+
+<article class="w-full min-w-0 px-4 pb-8 pt-4 sm:px-5 sm:pt-5 md:px-6 md:pt-6">
+  <header class="mb-5 sm:mb-6">
+    <div class="flex items-start justify-between gap-3">
+      <div class="min-w-0">
+        <p class="font-display text-[9px] font-bold uppercase tracking-[0.22em] text-zinc-500">Quest log</p>
+        <h1 class="mt-1 font-display text-xl font-bold tracking-tight text-zinc-50 sm:text-2xl">Quest Journal</h1>
+        <p class="mt-1 max-w-2xl font-ui text-[13px] leading-relaxed text-zinc-400">
+          Filter by daily or weekly completions, pick a date range (max 180 days), and see streaks for this week.
+        </p>
+      </div>
+      <a
+        href="/daily"
+        class="inline-flex min-h-[40px] items-center justify-center rounded-xl border border-zinc-600 bg-zinc-800/90 px-3 py-2 text-center font-display text-[9px] font-bold uppercase tracking-[0.12em] text-zinc-100 shadow-sm transition hover:border-zinc-500 hover:bg-zinc-700"
+      >Back</a>
+    </div>
+  </header>
+
+  <section class="mb-4 flex flex-wrap gap-2" aria-label="Quest type">
+    <% ['all', 'daily', 'weekly'].forEach(function (key) {
+         const label = key === 'all' ? 'All' : key === 'daily' ? 'Daily' : 'Weekly';
+         const active = sc === key;
+    %>
+      <a
+        href="<%= journalUrl({ scope: key }) %>"
+        class="inline-flex items-center rounded-lg border px-3 py-1.5 font-display text-[9px] font-bold uppercase tracking-[0.12em] transition <%= active ? 'border-violet-500/60 bg-violet-950/40 text-violet-100' : 'border-zinc-700 bg-zinc-900 text-zinc-400 hover:border-zinc-500 hover:text-zinc-200' %>"
+      ><%= label %></a>
+    <% }); %>
+  </section>
+
+  <section class="mb-4 flex flex-wrap items-center gap-2 sm:mb-5" aria-label="Quick range">
+    <% [7, 30, 90].forEach(function (d) {
+         const active = rm === 'preset' && pd === d;
+    %>
+      <a
+        href="<%= journalUrl({ days: d, usePreset: true }) %>"
+        class="inline-flex items-center rounded-lg border px-3 py-1.5 font-display text-[9px] font-bold uppercase tracking-[0.12em] transition <%= active ? 'border-zinc-500 bg-zinc-800 text-zinc-50' : 'border-zinc-700 bg-zinc-900 text-zinc-400 hover:border-zinc-500 hover:text-zinc-200' %>"
+      ><%= d %>d</a>
+    <% }); %>
+    <% if (rm === 'range') { %>
+      <span class="inline-flex items-center rounded-lg border border-amber-500/35 bg-amber-950/25 px-3 py-1.5 font-ui text-[11px] text-amber-100/90">
+        Custom: <%= df %> → <%= dt %>
+      </span>
+      <a href="<%= journalUrl({ scope: sc, days: 30, usePreset: true }) %>" class="font-ui text-[12px] font-medium text-violet-300 underline decoration-violet-500/40 underline-offset-2 hover:text-violet-200">Clear custom range</a>
+    <% } %>
+  </section>
+
+  <form method="get" action="/daily/history" class="mb-6 flex flex-col gap-3 rounded-2xl border border-zinc-700/80 bg-zinc-900/50 px-4 py-3 sm:flex-row sm:flex-wrap sm:items-end">
+    <input type="hidden" name="scope" value="<%= sc %>" />
+    <div class="flex flex-col gap-1">
+      <label for="jh-from" class="font-display text-[8px] font-bold uppercase tracking-[0.14em] text-zinc-500">From</label>
+      <input
+        id="jh-from"
+        name="from"
+        type="date"
+        value="<%= df %>"
+        class="min-h-[44px] rounded-lg border border-zinc-600 bg-zinc-950 px-3 py-2 font-ui text-sm text-zinc-100 outline-none focus:border-violet-500/60"
+      />
+    </div>
+    <div class="flex flex-col gap-1">
+      <label for="jh-to" class="font-display text-[8px] font-bold uppercase tracking-[0.14em] text-zinc-500">To</label>
+      <input
+        id="jh-to"
+        name="to"
+        type="date"
+        value="<%= dt %>"
+        class="min-h-[44px] rounded-lg border border-zinc-600 bg-zinc-950 px-3 py-2 font-ui text-sm text-zinc-100 outline-none focus:border-violet-500/60"
+      />
+    </div>
+    <button
+      type="submit"
+      class="inline-flex min-h-[44px] items-center justify-center rounded-lg border border-violet-500/40 bg-violet-950/35 px-4 font-display text-[9px] font-bold uppercase tracking-[0.12em] text-violet-100 transition hover:border-violet-400/60 hover:bg-violet-900/40"
+    >Apply range</button>
+    <p class="w-full font-ui text-[11px] leading-relaxed text-zinc-500 sm:w-auto sm:flex-1 sm:pl-2">
+      Uses server calendar dates. Range is capped at 180 days; end date cannot be after today.
+    </p>
+  </form>
+
+  <section class="mb-5 grid grid-cols-2 gap-2 sm:grid-cols-4" aria-label="Streak and this week">
+    <div class="rounded-xl border border-rose-500/25 bg-rose-950/20 px-3 py-2">
+      <p class="font-display text-[8px] font-bold uppercase tracking-[0.12em] text-rose-200/90">Best daily streak</p>
+      <p class="mt-1 font-mono text-lg font-bold tabular-nums text-rose-100"><%= n(ss.bestDailyStreak) %></p>
+      <p class="mt-0.5 font-ui text-[10px] text-zinc-500">Any quest type</p>
+    </div>
+    <div class="rounded-xl border border-fuchsia-500/25 bg-fuchsia-950/20 px-3 py-2">
+      <p class="font-display text-[8px] font-bold uppercase tracking-[0.12em] text-fuchsia-200/90">Best weekly streak</p>
+      <p class="mt-1 font-mono text-lg font-bold tabular-nums text-fuchsia-100"><%= n(ss.bestWeeklyStreak) %></p>
+      <p class="mt-0.5 font-ui text-[10px] text-zinc-500">Per task type</p>
+    </div>
+    <div class="rounded-xl border border-teal-500/25 bg-teal-950/20 px-3 py-2">
+      <p class="font-display text-[8px] font-bold uppercase tracking-[0.12em] text-teal-200/90">This week · daily done</p>
+      <p class="mt-1 font-mono text-lg font-bold tabular-nums text-teal-100"><%= n(ss.weekDailyDone) %></p>
+      <p class="mt-0.5 font-ui text-[10px] text-zinc-500">Mon–today (server)</p>
+    </div>
+    <div class="rounded-xl border border-indigo-500/25 bg-indigo-950/20 px-3 py-2">
+      <p class="font-display text-[8px] font-bold uppercase tracking-[0.12em] text-indigo-200/90">This week · weekly done</p>
+      <p class="mt-1 font-mono text-lg font-bold tabular-nums text-indigo-100"><%= n(ss.weekWeeklyDone) %></p>
+      <p class="mt-0.5 font-ui text-[10px] text-zinc-500">Current week row</p>
+    </div>
+  </section>
+
+  <section class="mb-6 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
+    <div class="rounded-xl border border-sky-500/30 bg-sky-500/10 px-3 py-2">
+      <p class="font-display text-[8px] font-bold uppercase tracking-[0.12em] text-sky-300">Daily core</p>
+      <p class="mt-1 font-mono text-lg font-bold tabular-nums text-sky-100"><%= n(s.dailyCoreDone) %></p>
+    </div>
+    <div class="rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2">
+      <p class="font-display text-[8px] font-bold uppercase tracking-[0.12em] text-amber-200">Daily bonus</p>
+      <p class="mt-1 font-mono text-lg font-bold tabular-nums text-amber-100"><%= n(s.dailyBonusDone) %></p>
+    </div>
+    <div class="rounded-xl border border-cyan-500/30 bg-cyan-500/10 px-3 py-2">
+      <p class="font-display text-[8px] font-bold uppercase tracking-[0.12em] text-cyan-200">Weekly</p>
+      <p class="mt-1 font-mono text-lg font-bold tabular-nums text-cyan-100"><%= n(s.weeklyDone) %></p>
+    </div>
+    <div class="rounded-xl border border-orange-500/30 bg-orange-500/10 px-3 py-2">
+      <p class="font-display text-[8px] font-bold uppercase tracking-[0.12em] text-orange-200">Weekly boss</p>
+      <p class="mt-1 font-mono text-lg font-bold tabular-nums text-orange-100"><%= n(s.weeklyBossDone) %></p>
+    </div>
+    <div class="rounded-xl border border-violet-500/30 bg-violet-500/10 px-3 py-2">
+      <p class="font-display text-[8px] font-bold uppercase tracking-[0.12em] text-violet-200">Reflections</p>
+      <p class="mt-1 font-mono text-lg font-bold tabular-nums text-violet-100"><%= n(s.reflectionsCount) %></p>
+    </div>
+    <div class="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2">
+      <p class="font-display text-[8px] font-bold uppercase tracking-[0.12em] text-emerald-200">EXP logged</p>
+      <p class="mt-1 font-mono text-lg font-bold tabular-nums text-emerald-100">+<%= n(s.expTotal) %></p>
+    </div>
+  </section>
+
+  <% if (!rows.length) { %>
+    <div class="rounded-2xl border border-dashed border-zinc-600 bg-zinc-900/80 px-4 py-10 text-center">
+      <% if (!hasEver) { %>
+        <p class="font-display text-[11px] font-bold uppercase tracking-[0.12em] text-zinc-300">Journal empty</p>
+        <p class="mx-auto mt-3 max-w-md font-ui text-sm leading-relaxed text-zinc-400">
+          Complete daily or weekly quests on <a href="/daily" class="font-medium text-violet-300 underline decoration-violet-500/50 underline-offset-2 hover:text-violet-200">Quests</a> to build your timeline. Reflections show up here too when you save them.
+        </p>
+      <% } else { %>
+        <p class="font-display text-[11px] font-bold uppercase tracking-[0.12em] text-zinc-300">No entries in this view</p>
+        <p class="mx-auto mt-3 max-w-md font-ui text-sm leading-relaxed text-zinc-400">
+          Nothing matches your current filter or dates. Try <strong class="font-medium text-zinc-200">All</strong>, a longer quick range (30d / 90d), or widen the custom from/to range.
+        </p>
+      <% } %>
+    </div>
+  <% } else { %>
+    <section class="space-y-4">
+      <% rows.forEach(function (d) { %>
+        <article class="rounded-2xl border border-zinc-700/80 bg-zinc-900/80 px-4 py-3.5 shadow-sm">
+          <h2 class="font-display text-[11px] font-bold uppercase tracking-[0.14em] text-zinc-100"><%= fmt(d.dateKey) %></h2>
+          <div class="mt-2 flex flex-wrap gap-1.5">
+            <% d.daily.forEach(function (q) { %>
+              <span class="rounded-lg border border-sky-500/30 bg-sky-500/10 px-2 py-1 font-ui text-[11px] text-sky-100">
+                Daily<%= q.isBonus ? ' bonus' : '' %> · <%= q.name %> · +<span class="font-mono tabular-nums"><%= n(q.rewardExp) %></span>
+              </span>
+            <% }); %>
+            <% d.weekly.forEach(function (q) { %>
+              <span class="rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-2 py-1 font-ui text-[11px] text-cyan-100">
+                Weekly<%= q.isBoss ? ' boss' : '' %> · <%= q.name %> · +<span class="font-mono tabular-nums"><%= n(q.rewardExp) %></span>
+              </span>
+            <% }); %>
+          </div>
+          <% if (d.reflections && d.reflections.length) { %>
+            <% d.reflections.forEach(function (r) { %>
+              <p class="mt-2 rounded-lg border border-violet-500/25 bg-violet-950/25 px-3 py-2 font-ui text-[12px] leading-relaxed text-zinc-300">
+                <span class="font-semibold text-violet-200">Reflection:</span> <%= r.body %>
+              </p>
+            <% }); %>
+          <% } %>
+        </article>
+      <% }); %>
+    </section>
+  <% } %>
+</article>

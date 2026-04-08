@@ -1,0 +1,49 @@
+<% const cur = typeof navActive === 'string' ? navActive : ''; %>
+<% function navActiveMatch(id) {
+  if (id === 'profile') return cur === 'profile' || cur === 'profile-add-job';
+  if (id === 'quest') return cur === 'quest' || cur === 'daily';
+  return cur === id;
+} %>
+<% function navClass(id) { return navActiveMatch(id) ? 'text-zinc-50' : 'text-zinc-500 hover:text-zinc-200'; } %>
+
+<nav class="app-nav-light fixed bottom-0 left-0 right-0 z-30 px-3 pt-2 backdrop-blur-xl sm:px-4" style="padding-bottom: max(0.75rem, env(safe-area-inset-bottom)); padding-left: max(0.75rem, env(safe-area-inset-left, 0px)); padding-right: max(0.75rem, env(safe-area-inset-right, 0px));" aria-label="Main">
+  <div class="mx-auto flex w-full max-w-md items-center justify-between gap-1 rounded-2xl border border-zinc-700/70 bg-zinc-950/80 px-1.5 py-1.5 shadow-[0_-10px_28px_rgba(0,0,0,0.5)] sm:max-w-lg sm:gap-1.5 md:max-w-xl lg:max-w-2xl">
+    <a href="/daily" class="app-nav-light__link group flex min-h-[56px] flex-1 flex-col items-center justify-center gap-1 rounded-xl py-1.5 transition touch-manipulation <%= navClass('quest') %>" aria-label="Tasks — daily and weekly board">
+      <span class="app-nav-light__icon flex h-9 w-9 items-center justify-center rounded-xl md:h-10 md:w-10">
+        <svg class="h-4 w-4 md:h-[1.05rem] md:w-[1.05rem]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+          <path d="M4 4v15.5" />
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+          <path d="M12 7h4" />
+          <path d="M12 11h4" />
+        </svg>
+      </span>
+      <span class="font-display text-[8px] font-bold uppercase tracking-[0.12em] text-current sm:text-[9px]">Task</span>
+    </a>
+    <a href="/training" class="app-nav-light__link group flex min-h-[56px] flex-1 flex-col items-center justify-center gap-1 rounded-xl py-1.5 transition touch-manipulation <%= navClass('training') %>">
+      <span class="app-nav-light__icon flex h-9 w-9 items-center justify-center rounded-xl md:h-10 md:w-10">
+        <svg class="h-4 w-4 md:h-[1.05rem] md:w-[1.05rem]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <path d="M6 4v16M18 4v16M6 12h12" />
+        </svg>
+      </span>
+      <span class="font-display text-[8px] font-bold uppercase tracking-wider sm:text-[9px]">Train</span>
+    </a>
+    <a href="/inventory" class="app-nav-light__link group flex min-h-[56px] flex-1 flex-col items-center justify-center gap-1 rounded-xl py-1.5 transition touch-manipulation <%= navClass('inventory') %>">
+      <span class="app-nav-light__icon flex h-9 w-9 items-center justify-center rounded-xl md:h-10 md:w-10">
+        <svg class="h-4 w-4 md:h-[1.05rem] md:w-[1.05rem]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <path d="M12 2c0 4-2 7-6 9 4 2 6 5 6 9 0-4 2-7 6-9-4-2-6-5-6-9z" />
+          <path d="M12 22V12" />
+        </svg>
+      </span>
+      <span class="font-display text-[8px] font-bold uppercase tracking-wider sm:text-[9px]">Vault</span>
+    </a>
+    <a href="/profile" class="app-nav-light__link group flex min-h-[56px] flex-1 flex-col items-center justify-center gap-1 rounded-xl py-1.5 transition touch-manipulation <%= navClass('profile') %>">
+      <span class="app-nav-light__icon flex h-9 w-9 items-center justify-center rounded-xl md:h-10 md:w-10">
+        <svg class="h-4 w-4 md:h-[1.05rem] md:w-[1.05rem]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <path d="M12 3L4 8v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V8l-8-5z" />
+        </svg>
+      </span>
+      <span class="font-display text-[8px] font-bold uppercase tracking-wider sm:text-[9px]">Character</span>
+    </a>
+  </div>
+</nav>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#09090b">
+  <title><%= typeof title !== 'undefined' ? title : appDisplayName %></title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body class="auth-portal app-skin-light app-night-ui min-h-dvh font-ui text-zinc-100 antialiased auth-variant-<%= typeof authVariant === 'string' ? authVariant : 'login' %>" <%- include('../partials/music-body-attrs') %>>
+  <a href="#auth-main" class="auth-skip">Skip to form</a>
+  <div class="auth-scene launch-hero-ro-light relative min-h-dvh overflow-hidden">
+    <div class="auth-grid" aria-hidden="true"></div>
+    <div class="auth-grid-slow pointer-events-none absolute inset-0" aria-hidden="true"></div>
+    <div class="pointer-events-none absolute inset-0 bg-auth-clouds" aria-hidden="true"></div>
+    <div class="auth-orb auth-orb-a" aria-hidden="true"></div>
+    <div class="auth-orb auth-orb-b" aria-hidden="true"></div>
+    <div class="auth-orb auth-orb-c" aria-hidden="true"></div>
+    <div class="pointer-events-none absolute inset-0 bg-auth-vignette-light" aria-hidden="true"></div>
+
+    <div class="auth-scroll flex min-h-dvh flex-col justify-start pt-[max(0.75rem,env(safe-area-inset-top))] pb-[max(0.5rem,env(safe-area-inset-bottom))] pl-[max(1rem,env(safe-area-inset-left,0px))] pr-[max(1rem,env(safe-area-inset-right,0px))] sm:pl-6 sm:pr-6 md:pl-8 md:pr-8">
+      <header class="auth-brand relative z-10 mx-auto mb-5 w-full max-w-md text-center sm:mb-6 md:max-w-lg lg:max-w-xl">
+        <br>
+        <div class="auth-mascot relative mb-3 inline-block sm:mb-3" aria-hidden="true">
+          <div class="auth-orbit" aria-hidden="true"></div>
+          <svg width="56" height="56" viewBox="0 0 64 64" class="relative mx-auto h-14 w-14 drop-shadow-md sm:h-16 sm:w-16" aria-hidden="true">
+            <ellipse cx="32" cy="36" rx="26" ry="22" fill="#f4a6c8" stroke="#1e5a8a" stroke-width="1.5" opacity="0.98"/>
+            <ellipse cx="24" cy="34" rx="4" ry="5" fill="#1a2740"/>
+            <ellipse cx="40" cy="34" rx="4" ry="5" fill="#1a2740"/>
+            <ellipse cx="22" cy="32" rx="1.5" ry="2" fill="#fff" opacity="0.95"/>
+            <ellipse cx="38" cy="32" rx="1.5" ry="2" fill="#fff" opacity="0.95"/>
+            <path d="M28 44 Q32 48 36 44" fill="none" stroke="#b45309" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <p class="auth-server-line font-display text-[10px] font-semibold uppercase tracking-[0.28em] text-[#2c5282] sm:text-[11px]">Daily rhythm · real-life progression</p>
+        <div class="auth-rune-line mx-auto mt-2.5 max-w-[200px]" aria-hidden="true"></div>
+        <h1 class="auth-title mt-3 font-display text-[1.6rem] font-bold leading-tight tracking-[0.05em] text-zinc-50 sm:text-[2rem] sm:tracking-[0.07em]">
+          <%= appDisplayName %>
+        </h1>
+        <p class="auth-tagline mx-auto mt-2 max-w-[20rem] text-[15px] leading-snug text-zinc-400 sm:text-base">
+          Train in the real world · level up, unlock jobs, log IRL quests
+        </p>
+      </header>
+
+      <div id="auth-main" class="auth-card-wrap relative z-10 mx-auto w-full max-w-md scroll-mt-4 md:max-w-lg lg:max-w-xl" tabindex="-1">
+        <div class="auth-card-glow" aria-hidden="true"></div>
+        <div class="auth-card-shell">
+          <div class="auth-card-inner">
+            <%- body %>
+          </div>
+        </div>
+      </div>
+
+      <footer class="auth-footer relative z-10 mx-auto mt-4 max-w-md px-1 pb-1 text-center text-[10px] leading-snug text-zinc-500 sm:mt-5 sm:text-[11px] md:max-w-lg lg:max-w-xl">
+        <%= appDisplayName %> is an independent product · fantasy-inspired UI for real-world habits
+      </footer>
+    </div>
+  </div>
+  <script src="/js/auth-ui.js" defer></script>
+  <script src="/js/ambient-music.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<% const offers = typeof morningOffers !== 'undefined' && Array.isArray(morningOffers) ? morningOffers : []; %>
+<% const maxP = typeof maxMorningPicks === 'number' && maxMorningPicks > 0 ? maxMorningPicks : 3; %>
+<% const pillars = typeof pillarLegend !== 'undefined' && Array.isArray(pillarLegend) ? pillarLegend : []; %>
+<section class="daily-morning-board mb-6 md:mb-8" aria-labelledby="morning-board-heading">
+  <div class="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+    <div class="flex items-center gap-3">
+      <span class="h-10 w-1 shrink-0 rounded-full bg-amber-500 sm:h-12" aria-hidden="true"></span>
+      <div>
+        <h2 id="morning-board-heading" class="font-display text-sm font-bold uppercase tracking-[0.14em] text-zinc-50 sm:text-base">Morning — choose your quests</h2>
+        <p class="mt-0.5 max-w-xl font-ui text-[12px] leading-relaxed text-zinc-400 sm:text-[13px]">
+          Pick <strong class="font-semibold text-zinc-200">1–<%= maxP %></strong> from today’s class board. Base EXP shown per card; your <strong class="font-semibold text-zinc-200">first</strong> core completion today also adds <strong class="font-semibold text-zinc-200">+<%= typeof streakBonusPotential === 'number' ? streakBonusPotential : 0 %></strong> streak EXP (at your current login streak, capped).
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <% if (pillars.length) { %>
+  <div class="mb-4 flex flex-wrap gap-2 rounded-2xl border border-zinc-700/80 bg-zinc-900/90 px-3 py-2.5">
+    <% pillars.forEach(function (p) { %>
+    <span class="inline-flex max-w-[10rem] flex-col rounded-lg border border-zinc-600/80 bg-zinc-800/80 px-2 py-1" title="<%= p.hint %>">
+      <span class="font-display text-[9px] font-bold uppercase tracking-wider text-zinc-200"><%= p.label %></span>
+      <span class="font-ui text-[9px] leading-tight text-zinc-500"><%= p.hint %></span>
+    </span>
+    <% }); %>
+  </div>
+  <% } %>
+
+  <% if (!offers.length) { %>
+  <p class="rounded-2xl border border-dashed border-zinc-600 bg-zinc-900/80 px-4 py-8 text-center font-ui text-sm text-zinc-400">No quests in your job pool — check Character or database seeds.</p>
+  <% } else { %>
+  <form id="daily-morning-pick-form" action="/daily/morning-pick" method="post" class="space-y-4" data-auth-form data-max-picks="<%= maxP %>">
+    <p class="font-ui text-[11px] text-zinc-500">
+      Selected base EXP (estimate): <strong class="font-mono tabular-nums text-zinc-200" id="morning-pick-exp-sum">0</strong>
+      <span class="text-zinc-600">·</span>
+      Max <span class="font-mono"><%= maxP %></span> quests
+    </p>
+    <ul class="space-y-3">
+      <% offers.forEach(function (o) { %>
+      <li class="rounded-2xl border border-zinc-700/80 bg-zinc-900 p-4 shadow-md shadow-black/30">
+        <label class="flex cursor-pointer gap-3">
+          <input type="checkbox" name="taskTypeId" value="<%= o.taskTypeId %>" class="morning-pick-cb mt-1 h-4 w-4 shrink-0 rounded border-zinc-500 bg-zinc-950 text-amber-500 focus:ring-zinc-500" data-base-exp="<%= o.baseExp %>" />
+          <span class="min-w-0 flex-1">
+            <span class="flex flex-wrap items-center gap-2">
+              <span class="rounded-md border border-amber-500/30 bg-amber-950/40 px-1.5 py-0.5 font-display text-[8px] font-bold uppercase tracking-wider text-amber-200"><%= o.pillarLabel %></span>
+              <span class="font-mono text-[10px] font-bold tabular-nums text-zinc-400">+<%= o.baseExp %> EXP</span>
+            </span>
+            <span class="mt-1 block font-ui text-sm font-semibold text-zinc-50"><%= o.name %></span>
+            <% if (o.description) { %>
+            <span class="mt-0.5 block font-ui text-[11px] leading-snug text-zinc-400"><%= o.description %></span>
+            <% } %>
+          </span>
+        </label>
+      </li>
+      <% }); %>
+    </ul>
+    <button type="submit" class="w-full rounded-xl border border-zinc-500 bg-zinc-800 py-3 font-display text-[10px] font-bold uppercase tracking-[0.16em] text-zinc-100 shadow-md transition hover:bg-zinc-700 sm:text-[11px]">
+      Lock today’s lineup
+    </button>
+  </form>
+  <% } %>
+</section>

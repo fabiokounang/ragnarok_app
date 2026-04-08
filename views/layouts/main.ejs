@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#09090b">
+  <title><%= typeof title !== 'undefined' ? title : appDisplayName %></title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body class="app-night-ui min-h-dvh bg-zinc-950 font-ui text-zinc-100 antialiased">
+  <div class="mx-auto flex min-h-dvh max-w-lg flex-col shadow-2xl shadow-black/60">
+    <%- include('../partials/game-header') %>
+    <main class="flex flex-1 flex-col px-3 pt-3 sm:px-4 <%= typeof hideGameNav !== 'undefined' && hideGameNav ? 'pb-8' : 'pb-28' %>">
+      <%- body %>
+    </main>
+    <% if (typeof hideGameNav === 'undefined' || !hideGameNav) { %>
+    <%- include('../partials/game-nav') %>
+    <% } %>
+  </div>
+</body>
+</html>

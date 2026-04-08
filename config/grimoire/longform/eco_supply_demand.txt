@@ -1,0 +1,101 @@
+## Demand
+
+Demand summarizes how much people want at various prices, all else equal. Lower prices usually increase quantity demanded; higher prices cool it.
+
+Shifts vs movements along the curve: a fad increases demand at every price (curve moves). A sale moves you along the curve at one moment. Confusing the two muddles policy debates.
+
+## Supply
+
+Supply summarizes how much producers will sell at various prices. Higher prices often call forth more production until costs rise.
+
+Technology, input costs, regulation, and expectations shift supply — a drought shifts food supply left (less at each price) even if hunger stayed constant.
+
+## Equilibrium (a story, not magic)
+
+Where curves cross is a useful model of a clearing price. Real markets have friction, power, information gaps, and policy — but the supply/demand lens explains many headlines: oil shocks, housing shortages, wage debates.
+
+Elasticity measures sensitivity: if price doubles and quantity barely moves (insulin, unique housing near jobs), demand is inelastic — who bears taxes and shocks changes dramatically.
+
+## When the model breaks (a little)
+
+Network effects, monopolies, and behavioral quirks bend the simple chart. Still, starting from supply/demand beats starting from vibes.
+
+## Deeper dive — part 1
+
+Labor markets are not like apple markets: wages are sticky, contracts lag shocks, and norms about fairness influence whether firms cut pay versus headcount during downturns.
+
+Productivity growth is the deep engine of higher living standards: better tools, better skills, better organization — not simply working longer hours, which hits biological and social limits.
+
+Antitrust debates ask when big firms help consumers through scale and when they harm through exclusion — “bigness” is not automatically evil or good; market structure and conduct matter.
+
+Development economics studies why some countries escape poverty traps: institutions, geography, history, health, education, and openness to ideas interact; single-factor stories rarely suffice.
+
+## Deeper dive — part 2
+
+Real versus nominal: economists stress “real” values adjusted for inflation so you compare purchasing power across years; nominal headlines can mislead when the price level moves fast.
+
+Crowding out suggests government borrowing can raise interest rates and displace private investment; crowding in happens when public infrastructure makes private projects more profitable.
+
+The impossible trinity (open-economy macro) claims you cannot simultaneously have fixed exchange rates, free capital movement, and independent monetary policy — something must give.
+
+Moral hazard appears when insurance dulls caution: bank bailouts without restructuring can encourage future risk-taking unless regulation and capital rules tighten in parallel.
+
+## Deeper dive — part 3
+
+Gender and race gaps in pay and wealth reflect overlapping forces: discrimination, sorting, network access, occupational choice, and cumulative small disadvantages that compound over careers.
+
+Opportunity cost is the unchosen path: when a city builds a stadium, the cost includes whatever else those bricks and hours could have produced, not only the invoice from the contractor.
+
+Comparative advantage explains why countries trade even when one could technically outproduce another in every good: relative efficiency, not absolute dominance, sets the pattern of specialization.
+
+Price ceilings, like rent caps, can shrink the supply landlords offer or reduce maintenance incentives; price floors, like agricultural supports, can create surpluses that require storage or disposal policy.
+
+## Deeper dive — part 4
+
+Externalities spill costs or benefits onto bystanders: vaccination helps the vaccinated person and also lowers risk for strangers; pollution from a factory hits lungs downwind who never bought the product.
+
+Public goods are non-rival and non-excludable in theory — clean air, national defense, basic scientific knowledge — which is why markets alone underfund them without taxes or collective rules.
+
+Information asymmetry appears when sellers know more than buyers (used cars, complex insurance), inviting screening, signaling, warranties, and regulation to reduce fraud or mistaken trades.
+
+Behavioral economics documents predictable human quirks: present bias, loss aversion, anchoring — useful for designing savings defaults and for skepticism toward models that assume perfect rationality.
+
+## Deeper dive — part 5
+
+The Phillips curve once summarized a tradeoff between inflation and unemployment; experience since the 1970s showed supply shocks and expectations can break a simple short-run relationship.
+
+Central bank independence is designed to separate day-to-day politics from interest-rate decisions, though mandates and appointments remain unavoidably political at a constitutional level.
+
+Fiscal multipliers ask how much GDP moves when the government spends a dollar; estimates differ by whether the economy is slack, how financing works, and whether imports leak demand abroad.
+
+The Laffer curve is a pedagogical curve: tax revenue hits zero at rates of zero and (theoretically) at one hundred percent, with a peak between — but the peak’s location is an empirical fight, not a slogan.
+
+## Deeper dive — part 6
+
+Human capital investment — education, training, health — raises productivity and wages over decades; cutting those budgets to “save money” often shifts costs to slower growth and higher social spending later.
+
+Urban economics links agglomeration: people and firms cluster because proximity speeds matching, sharing infrastructure, and idea spillovers — but also raises housing costs and congestion.
+
+Environmental economics prices nature imperfectly: GDP rises when you cut a forest and sell timber, even if watersheds and biodiversity collapse — green accounting tries to widen the scorecard.
+
+Inequality metrics (Gini, percentile shares) describe distribution; they do not by themselves tell you whether the process is fair, efficient, or stable — those are moral and political layers on top.
+
+## Deeper dive — part 7
+
+Sovereign debt crises mix math and credibility: if markets believe a state will inflate away obligations or default, rates spike and the fear can become self-fulfilling without a credible plan.
+
+Labor markets are not like apple markets: wages are sticky, contracts lag shocks, and norms about fairness influence whether firms cut pay versus headcount during downturns.
+
+Productivity growth is the deep engine of higher living standards: better tools, better skills, better organization — not simply working longer hours, which hits biological and social limits.
+
+Antitrust debates ask when big firms help consumers through scale and when they harm through exclusion — “bigness” is not automatically evil or good; market structure and conduct matter.
+
+## Deeper dive — part 8
+
+Development economics studies why some countries escape poverty traps: institutions, geography, history, health, education, and openness to ideas interact; single-factor stories rarely suffice.
+
+Real versus nominal: economists stress “real” values adjusted for inflation so you compare purchasing power across years; nominal headlines can mislead when the price level moves fast.
+
+Crowding out suggests government borrowing can raise interest rates and displace private investment; crowding in happens when public infrastructure makes private projects more profitable.
+
+The impossible trinity (open-economy macro) claims you cannot simultaneously have fixed exchange rates, free capital movement, and independent monetary policy — something must give.

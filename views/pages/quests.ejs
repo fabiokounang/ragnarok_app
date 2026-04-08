@@ -1,0 +1,485 @@
+<%
+  const ds = typeof dailySummary !== 'undefined' && dailySummary ? dailySummary : {};
+  const ws = typeof weeklySummary !== 'undefined' && weeklySummary ? weeklySummary : {};
+  const openBoard = Array.isArray(boardOpenQuests) ? boardOpenQuests : [];
+  const myActive = Array.isArray(boardMyActiveQuests) ? boardMyActiveQuests : [];
+  const myFinished = Array.isArray(boardMyFinishedQuests) ? boardMyFinishedQuests : [];
+  const myReview = Array.isArray(boardMyReviewQuests) ? boardMyReviewQuests : [];
+  const qbFlashMsg = typeof qbFlash === 'string' ? qbFlash : '';
+  const currencyName = typeof softCurrencyName === 'string' && softCurrencyName ? softCurrencyName : 'Astra';
+  const myAstraValue = Number.isFinite(Number(myAstra)) ? Number(myAstra) : 0;
+  const myRenownValue = Number.isFinite(Number(myRenown)) ? Number(myRenown) : 0;
+  const caps = typeof questPostCaps === 'object' && questPostCaps ? questPostCaps : {};
+  const postExpMin = Number.isFinite(Number(caps.expMin)) ? Number(caps.expMin) : 10;
+  const postExpMax = Number.isFinite(Number(caps.expMax)) ? Number(caps.expMax) : 120;
+  const postAstraMin = Number.isFinite(Number(caps.astraMin)) ? Number(caps.astraMin) : 0;
+  const postAstraMax = Number.isFinite(Number(caps.astraMax)) ? Number(caps.astraMax) : 40;
+  const postIssuerAstraMin = Number.isFinite(Number(caps.issuerAstraMin)) ? Number(caps.issuerAstraMin) : 0;
+  const postIssuerAstraMax = Number.isFinite(Number(caps.issuerAstraMax)) ? Number(caps.issuerAstraMax) : 20;
+  const levelForCap = Number.isFinite(Number(myLevel)) ? Number(myLevel) : 1;
+  function expiryText(raw) {
+    try {
+      if (!raw) return 'No expiry';
+      const ms = new Date(raw).getTime() - Date.now();
+      if (!Number.isFinite(ms)) return 'No expiry';
+      if (ms <= 0) return 'Expired';
+      const d = Math.floor(ms / 86400000);
+      if (d >= 1) return d + 'd left';
+      const h = Math.floor(ms / 3600000);
+      if (h >= 1) return h + 'h left';
+      const m = Math.floor(ms / 60000);
+      return Math.max(1, m) + 'm left';
+    } catch {
+      return 'No expiry';
+    }
+  }
+  function rewardWhy(q) {
+    const cad = String(q.cadence || '').toLowerCase();
+    const tag = String(q.track_tag || '').toUpperCase();
+    if (cad === 'weekly') return 'Weekly scope: higher effort, higher reward.';
+    if (tag === 'INT') return 'Learning quests reward stable long-term growth.';
+    if (tag === 'STR') return 'Physical quests pay for consistency.';
+    if (tag === 'DIS') return 'Rhythm tasks reward streak-safe execution.';
+    if (tag === 'SPR') return 'Recovery tasks give moderate but reliable gains.';
+    return 'Balanced reward based on scope and cadence.';
+  }
+  function pinColorClass(statusRaw) {
+    const s = String(statusRaw || 'open').toLowerCase();
+    if (s === 'accepted' || s === 'submitted') return 'bg-sky-500';
+    if (s === 'approved' || s === 'completed') return 'bg-emerald-500';
+    if (s === 'rejected' || s === 'expired' || s === 'cancelled') return 'bg-rose-500';
+    return 'bg-amber-500';
+  }
+  function qbBadgeClass(statusRaw) {
+    const s = String(statusRaw || '').toLowerCase();
+    if (s === 'open') return 'qb-card__badge--open';
+    if (s === 'submitted') return 'qb-card__badge--submitted';
+    if (s === 'accepted') return 'qb-card__badge--accepted';
+    if (s === 'approved') return 'qb-card__badge--done';
+    if (s === 'rejected' || s === 'expired' || s === 'cancelled') return 'qb-card__badge--bad';
+    return 'qb-card__badge--accepted';
+  }
+  function qbFlashLabel(code) {
+    const c = String(code || '').trim();
+    const map = {
+      accepted: 'Quest accepted.',
+      submitted: 'Completion sent — the poster will review before rewards are granted.',
+      completed: 'Quest finished — EXP and rewards were added to your account.',
+      created: 'Your quest was posted to the board.',
+      approved: 'Review complete — quest approved and rewards were granted.',
+      rejected: 'Review complete — quest rejected.',
+      err_receiver_not_found: 'Target user not found. Check username/email receiver.',
+      err_self_target: 'You cannot target yourself.',
+      err_self_accept: 'You cannot accept your own quest.',
+      err_not_target_receiver: 'This quest is assigned to another user.',
+      err_req_level: 'Your level does not meet this quest requirement yet.',
+      err_req_tier: 'Your current job tier does not meet this quest requirement yet.',
+      err_reward_exp_cap: 'Reward EXP exceeds your current level cap.',
+      err_reward_astra_cap: 'Reward Astra exceeds your current level cap.',
+      err_issuer_reward_astra_cap: 'Issuer bonus exceeds your current level cap.',
+    };
+    if (map[c]) return map[c];
+    if (c.startsWith('err_')) return 'Something went wrong (' + c.replace(/^err_/, '') + ').';
+    return c ? 'Quest board: ' + c : '';
+  }
+  const coreDone = Number(ds.coreDone) || 0;
+  const coreTotal = Number(ds.coreTotal) || 0;
+  const bonusDone = Number(ds.bonusDone) || 0;
+  const bonusTotal = Number(ds.bonusTotal) || 0;
+  const weeklyDone = Number(ws.weeklyDone) || 0;
+  const weeklyTotal = Number(ws.weeklyTotal) || 0;
+  const bossDone = Number(ws.bossDone) || 0;
+  const bossTotal = Number(ws.bossTotal) || 0;
+%>
+
+<article class="quests-page w-full min-w-0 px-4 pb-8 pt-4 sm:px-5 sm:pt-5 md:px-6 md:pt-6" data-soft-currency="<%= currencyName %>">
+
+<div class="mb-5 flex items-start justify-between gap-3 sm:mb-6 sm:gap-4">
+
+  <div class="min-w-0">
+
+    <h1 class="font-display text-2xl font-bold uppercase tracking-wide text-zinc-50 sm:text-3xl md:text-4xl">Quest Board</h1>
+    <p class="mt-1 max-w-prose font-ui text-[13px] leading-relaxed text-zinc-400 sm:text-sm">
+      Town requests from people around you. Pick one quest, then execute it through your daily or weekly task flow.
+    </p>
+
+  </div>
+
+  <a href="/leaderboard" class="flex min-h-[44px] min-w-[3.25rem] shrink-0 flex-col items-center justify-center gap-1 rounded-xl border border-zinc-600 bg-zinc-800/90 px-2 py-2 text-center shadow-md shadow-black/30 transition hover:border-amber-500/50 touch-manipulation">
+
+    <span class="text-lg" aria-hidden="true">🏆</span>
+
+    <span class="font-display text-[8px] font-bold uppercase leading-none tracking-wider text-amber-300">Ranks</span>
+
+  </a>
+
+</div>
+
+
+
+<section class="mb-5 rounded-2xl border border-zinc-700/80 bg-zinc-900/70 p-3.5 sm:p-4">
+  <div class="mb-2 flex items-center justify-between gap-2">
+    <h2 class="font-display text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-300">Current progress</h2>
+    <a href="/daily" class="font-display text-[9px] font-bold uppercase tracking-[0.12em] text-violet-300 hover:text-violet-200">Open daily →</a>
+  </div>
+  <div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
+    <div class="rounded-lg border border-zinc-700 bg-zinc-800/80 px-2.5 py-2">
+      <p class="font-display text-[8px] uppercase tracking-[0.12em] text-zinc-500">Core</p>
+      <p class="mt-1 font-mono text-sm text-zinc-100"><%= coreDone %>/<%= coreTotal %></p>
+    </div>
+    <div class="rounded-lg border border-zinc-700 bg-zinc-800/80 px-2.5 py-2">
+      <p class="font-display text-[8px] uppercase tracking-[0.12em] text-zinc-500">Bonus</p>
+      <p class="mt-1 font-mono text-sm text-zinc-100"><%= bonusDone %>/<%= bonusTotal %></p>
+    </div>
+    <div class="rounded-lg border border-zinc-700 bg-zinc-800/80 px-2.5 py-2">
+      <p class="font-display text-[8px] uppercase tracking-[0.12em] text-zinc-500">Weekly</p>
+      <p class="mt-1 font-mono text-sm text-zinc-100"><%= weeklyDone %>/<%= weeklyTotal %></p>
+    </div>
+    <div class="rounded-lg border border-zinc-700 bg-zinc-800/80 px-2.5 py-2">
+      <p class="font-display text-[8px] uppercase tracking-[0.12em] text-zinc-500">Boss</p>
+      <p class="mt-1 font-mono text-sm text-zinc-100"><%= bossDone %>/<%= bossTotal %></p>
+    </div>
+  </div>
+</section>
+
+<section class="mt-6 rounded-2xl border border-zinc-700/80 bg-zinc-900/70 p-3.5 sm:p-4">
+  <div class="mb-3 flex flex-wrap items-start justify-between gap-2">
+    <div>
+      <h2 class="font-display text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-300">Quest Board (Beta)</h2>
+      <p class="mt-1 font-ui text-[12px] text-zinc-500">Semua quest ada di sini: dari <span class="text-zinc-300">Game Master</span> dan player lain.</p>
+      <p class="mt-1 font-ui text-[11px] text-zinc-500">Fairness rule: max 3 accepted quests at the same time per player.</p>
+    </div>
+    <div class="flex flex-wrap items-center justify-end gap-2">
+      <span class="rounded-lg border border-zinc-600 bg-zinc-800/90 px-2 py-1 font-mono text-[10px] text-zinc-200"><%= currencyName %>: <%= myAstraValue %></span>
+      <span class="rounded-lg border border-zinc-600 bg-zinc-800/90 px-2 py-1 font-mono text-[10px] text-zinc-200">Renown: <%= myRenownValue %></span>
+      <% if (myActive.length) { %>
+        <span class="rounded-lg border border-cyan-500/35 bg-cyan-950/35 px-2 py-1 font-display text-[9px] font-bold uppercase tracking-[0.1em] text-cyan-100">On progress: <%= myActive.length %></span>
+      <% } %>
+      <% if (myReview.length) { %>
+        <span class="rounded-lg border border-amber-500/35 bg-amber-950/35 px-2 py-1 font-display text-[9px] font-bold uppercase tracking-[0.1em] text-amber-100">Need review: <%= myReview.length %></span>
+      <% } %>
+      <button
+        type="button"
+        data-qb-open="create"
+        class="inline-flex min-h-[34px] items-center justify-center rounded-lg border border-violet-500/40 bg-violet-950/35 px-3 font-display text-[9px] font-bold uppercase tracking-[0.12em] text-violet-100 transition hover:border-violet-400/60"
+      >
+        + Post quest
+      </button>
+    </div>
+  </div>
+
+  <% if (qbFlashMsg) { %>
+    <p class="mb-3 rounded-lg border border-violet-500/30 bg-violet-950/30 px-3 py-2 font-ui text-[12px] text-violet-100">
+      <%= qbFlashLabel(qbFlashMsg) %>
+    </p>
+  <% } %>
+
+  <% if (myReview.length) { %>
+  <div class="mb-3 rounded-2xl border border-amber-500/35 bg-gradient-to-br from-amber-950/35 via-zinc-900/70 to-zinc-900/70 p-3 shadow-inner">
+    <div class="mb-2 flex items-center justify-between gap-2">
+      <h3 class="font-display text-[10px] font-bold uppercase tracking-[0.14em] text-amber-100">Need review</h3>
+      <span class="rounded-lg border border-amber-500/40 bg-amber-950/35 px-2 py-1 font-mono text-[10px] text-amber-100"><%= myReview.length %> pending</span>
+    </div>
+    <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
+      <% myReview.forEach(function (q) { %>
+      <div class="qb-card qb-card--progress">
+        <div class="flex items-center justify-between gap-2">
+          <p class="qb-card__from font-ui">Receiver <span class="qb-card__issuer"><%= q.receiver_name %></span></p>
+          <span class="qb-card__badge qb-card__badge--submitted">submitted</span>
+        </div>
+        <p class="qb-card__title"><%= q.title %></p>
+        <div class="mt-2 flex items-center justify-between gap-2">
+          <span class="qb-card__reward font-mono">+<%= q.reward_exp %> EXP · +<%= q.reward_astra %> <%= currencyName %></span>
+          <span class="qb-card__chip"><%= String(q.track_tag || 'META').toUpperCase() %>/<%= String(q.cadence || 'daily') %></span>
+        </div>
+        <div class="mt-2 grid grid-cols-2 gap-2">
+          <form method="post" action="/quests/board/<%= q.id %>/review" class="m-0">
+            <input type="hidden" name="approve" value="1" />
+            <button type="submit" class="inline-flex min-h-[38px] w-full items-center justify-center rounded-lg border border-emerald-500/45 bg-emerald-950/35 px-3 font-display text-[9px] font-bold uppercase tracking-[0.12em] text-emerald-100 transition hover:border-emerald-400/55">Approve</button>
+          </form>
+          <form method="post" action="/quests/board/<%= q.id %>/review" class="m-0">
+            <input type="hidden" name="approve" value="0" />
+            <button type="submit" class="inline-flex min-h-[38px] w-full items-center justify-center rounded-lg border border-rose-500/45 bg-rose-950/35 px-3 font-display text-[9px] font-bold uppercase tracking-[0.12em] text-rose-100 transition hover:border-rose-400/55">Reject</button>
+          </form>
+        </div>
+      </div>
+      <% }); %>
+    </div>
+  </div>
+  <% } %>
+
+  <div>
+    <div class="quest-board-tabbar flex gap-1 rounded-xl border border-zinc-700/80 bg-zinc-950/40 p-1" role="tablist" aria-label="Quest board tabs">
+      <button id="qb-tab-open" type="button" role="tab" aria-selected="true" aria-controls="qb-panel-open" class="min-h-[36px] flex-1 rounded-lg border border-zinc-500 bg-zinc-800 px-2 font-display text-[9px] font-bold uppercase tracking-[0.12em] text-zinc-100">Open (<%= openBoard.length %>)</button>
+      <button id="qb-tab-progress" type="button" role="tab" aria-selected="false" aria-controls="qb-panel-progress" tabindex="-1" class="min-h-[36px] flex-1 rounded-lg border border-transparent px-2 font-display text-[9px] font-bold uppercase tracking-[0.12em] text-zinc-400">Accept/Progress (<%= myActive.length %>)</button>
+      <button id="qb-tab-finish" type="button" role="tab" aria-selected="false" aria-controls="qb-panel-finish" tabindex="-1" class="min-h-[36px] flex-1 rounded-lg border border-transparent px-2 font-display text-[9px] font-bold uppercase tracking-[0.12em] text-zinc-400">Finish (<%= myFinished.length %>)</button>
+    </div>
+
+    <div id="qb-panel-open" role="tabpanel" aria-labelledby="qb-tab-open" class="mt-2 rounded-2xl border border-zinc-700/80 bg-gradient-to-br from-[#2b1f12] via-[#3a2a18] to-[#2a1d11] p-3 shadow-inner">
+      <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+        <% openBoard.slice(0, 12).forEach(function (q) { %>
+          <div class="qb-card qb-card--open">
+            <span class="absolute -right-1 -top-1 h-3 w-3 rounded-full <%= pinColorClass(q.status) %> shadow ring-2 ring-white/80" aria-hidden="true"></span>
+            <div class="flex items-center justify-between gap-2">
+              <p class="qb-card__from font-ui">From <span class="qb-card__issuer"><%= q.issuer_name %></span></p>
+              <span class="qb-card__badge <%= qbBadgeClass(q.status || 'open') %>"><%= q.status || 'open' %></span>
+            </div>
+            <p class="qb-card__title"><%= q.title %></p>
+            <div class="mt-2 flex items-center justify-between gap-2">
+              <span class="qb-card__reward font-mono">+<%= q.reward_exp %> EXP · +<%= q.reward_astra %> <%= currencyName %></span>
+              <button
+                type="button"
+                data-qb-open-detail="1"
+                data-qb-id="<%= q.id %>"
+                data-qb-status="<%= q.status || 'open' %>"
+                data-qb-title="<%= q.title %>"
+                data-qb-issuer="<%= q.issuer_name %>"
+                data-qb-desc="<%= q.description %>"
+                data-qb-reward-exp="<%= q.reward_exp %>"
+                data-qb-reward-astra="<%= q.reward_astra %>"
+                data-qb-track="<%= q.track_tag %>"
+                data-qb-cadence="<%= q.cadence %>"
+                data-qb-req-level="<%= Number(q.min_receiver_level) || 1 %>"
+                data-qb-req-tier="<%= Number(q.min_receiver_job_tier) || 0 %>"
+                data-qb-expiry="<%= expiryText(q.expires_at) %>"
+                data-qb-can-accept="<%= Number(q.is_self_issuer) === 1 ? '0' : '1' %>"
+                class="rounded-md border border-zinc-700/50 bg-zinc-900 px-2.5 py-1.5 font-display text-[8px] font-bold uppercase tracking-[0.12em] text-zinc-100 hover:bg-zinc-800"
+              >Details</button>
+            </div>
+            <div class="mt-1.5 flex items-center justify-between gap-2">
+              <span class="qb-card__foot font-ui"><%= rewardWhy(q) %> · EXP + item chance.</span>
+              <span class="qb-card__foot font-mono tabular-nums"><%= expiryText(q.expires_at) %></span>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+      <% if (!openBoard.length) { %>
+        <p class="qb-panel-empty qb-panel-empty--open font-ui">Board is empty. Try posting a new quest.</p>
+      <% } %>
+    </div>
+
+    <div id="qb-panel-progress" role="tabpanel" aria-labelledby="qb-tab-progress" class="mt-2 hidden rounded-2xl border border-zinc-700/80 bg-gradient-to-br from-[#0f2130] via-[#163144] to-[#11283a] p-3 shadow-inner">
+      <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+        <% myActive.forEach(function (q) { %>
+          <div class="qb-card qb-card--progress">
+            <span class="absolute -right-1 -top-1 h-3 w-3 rounded-full <%= String(q.status || '').toLowerCase() === 'submitted' ? 'bg-emerald-500' : 'bg-sky-500' %> shadow ring-2 ring-white/80" aria-hidden="true"></span>
+            <div class="flex items-center justify-between gap-2">
+              <p class="qb-card__from font-ui">From <span class="qb-card__issuer"><%= q.issuer_name %></span></p>
+              <span class="qb-card__badge <%= qbBadgeClass(q.status || 'accepted') %>"><%= q.status || 'accepted' %></span>
+            </div>
+            <p class="qb-card__title"><%= q.title %></p>
+            <div class="mt-2 flex items-center justify-between gap-2">
+              <span class="qb-card__reward font-mono">+<%= q.reward_exp %> EXP · +<%= q.reward_astra %> <%= currencyName %></span>
+              <button
+                type="button"
+                data-qb-open-detail="1"
+                data-qb-id="<%= q.id %>"
+                data-qb-status="<%= q.status || 'accepted' %>"
+                data-qb-title="<%= q.title %>"
+                data-qb-issuer="<%= q.issuer_name %>"
+                data-qb-desc="<%= String(q.status || '').toLowerCase() === 'submitted' ? 'Quest already submitted. Waiting issuer review.' : 'Quest is in progress. Complete it in real life, then submit from this card.' %>"
+                data-qb-reward-exp="<%= q.reward_exp %>"
+                data-qb-reward-astra="<%= q.reward_astra %>"
+                data-qb-track="<%= q.track_tag %>"
+                data-qb-cadence="<%= q.cadence %>"
+                data-qb-req-level="<%= Number(q.min_receiver_level) || 1 %>"
+                data-qb-req-tier="<%= Number(q.min_receiver_job_tier) || 0 %>"
+                data-qb-expiry="<%= expiryText(q.expires_at) %>"
+                class="rounded-md border border-zinc-700/50 bg-zinc-900 px-2.5 py-1.5 font-display text-[8px] font-bold uppercase tracking-[0.12em] text-zinc-100 hover:bg-zinc-800"
+              >Details</button>
+            </div>
+            <div class="mt-1.5 flex items-center justify-between gap-2">
+              <span class="qb-card__foot font-ui"><%= String(q.status || '').toLowerCase() === 'submitted' ? 'Waiting issuer review.' : 'In progress.' %> · EXP + item chance.</span>
+              <span class="qb-card__foot font-mono tabular-nums"><%= expiryText(q.expires_at) %></span>
+            </div>
+            <% 
+              var qStatus = String(q.status || '').toLowerCase();
+              var qSystem = String(q.issuer_kind || '').toLowerCase() === 'system';
+            %>
+            <% if (qStatus === 'accepted') { %>
+            <form method="post" action="/quests/board/<%= q.id %>/submit" class="qb-quest-submit-form mt-2.5 space-y-2 border-t border-slate-600/30 pt-2.5" data-qb-ajax="1">
+              <p class="qb-quest-submit-hint font-ui">
+                <% if (qSystem) { %>
+                  After you have done this in real life, complete the quest here to claim EXP and <%= currencyName %>.
+                <% } else { %>
+                  When you are done, submit for review. The poster must approve before you receive rewards.
+                <% } %>
+              </p>
+              <label class="block">
+                <span class="sr-only">Optional note</span>
+                <textarea name="note" rows="2" maxlength="1000" placeholder="Optional note (what you did)"></textarea>
+              </label>
+              <button type="submit" class="font-display">
+                <%= qSystem ? 'Mark complete & claim rewards' : 'Submit for review' %>
+              </button>
+            </form>
+            <% } %>
+          </div>
+        <% }); %>
+      </div>
+      <% if (!myActive.length) { %>
+        <p class="qb-panel-empty qb-panel-empty--progress font-ui">Belum ada quest yang kamu accept.</p>
+      <% } %>
+    </div>
+
+    <div id="qb-panel-finish" role="tabpanel" aria-labelledby="qb-tab-finish" class="mt-2 hidden rounded-2xl border border-zinc-700/80 bg-gradient-to-br from-[#1b2520] via-[#1a2f28] to-[#15261f] p-3 shadow-inner">
+      <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+        <% myFinished.forEach(function (q) { %>
+          <div class="qb-card qb-card--finish">
+            <span class="absolute -right-1 -top-1 h-3 w-3 rounded-full <%= pinColorClass(q.status) %> shadow ring-2 ring-white/80" aria-hidden="true"></span>
+            <div class="flex items-center justify-between gap-2">
+              <p class="qb-card__from font-ui">From <span class="qb-card__issuer"><%= q.issuer_name %></span></p>
+              <span class="qb-card__badge <%= qbBadgeClass(q.status) %>"><%= q.status || 'finished' %></span>
+            </div>
+            <p class="qb-card__title"><%= q.title %></p>
+            <div class="mt-2 flex items-center justify-between gap-2">
+              <span class="qb-card__reward font-mono">+<%= q.reward_exp %> EXP · +<%= q.reward_astra %> <%= currencyName %></span>
+              <button
+                type="button"
+                data-qb-open-detail="1"
+                data-qb-id="<%= q.id %>"
+                data-qb-status="<%= q.status || 'approved' %>"
+                data-qb-title="<%= q.title %>"
+                data-qb-issuer="<%= q.issuer_name %>"
+                data-qb-desc="<%= String(q.status || '').toLowerCase() === 'approved' ? 'Quest completed and rewards were granted.' : 'Quest has been resolved.' %>"
+                data-qb-reward-exp="<%= q.reward_exp %>"
+                data-qb-reward-astra="<%= q.reward_astra %>"
+                data-qb-track="<%= q.track_tag %>"
+                data-qb-cadence="<%= q.cadence %>"
+                data-qb-req-level="<%= Number(q.min_receiver_level) || 1 %>"
+                data-qb-req-tier="<%= Number(q.min_receiver_job_tier) || 0 %>"
+                data-qb-expiry="<%= expiryText(q.expires_at) %>"
+                class="rounded-md border border-zinc-700/50 bg-zinc-900 px-2.5 py-1.5 font-display text-[8px] font-bold uppercase tracking-[0.12em] text-zinc-100 hover:bg-zinc-800"
+              >Details</button>
+            </div>
+            <div class="mt-1.5 flex items-center justify-between gap-2">
+              <span class="qb-card__foot font-ui"><%= String(q.status || '').toLowerCase() === 'approved' ? 'Rewards granted.' : 'Quest resolved.' %> · EXP + item chance.</span>
+              <span class="qb-card__foot font-mono tabular-nums"><%= expiryText(q.expires_at) %></span>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+      <% if (!myFinished.length) { %>
+        <p class="qb-panel-empty qb-panel-empty--finish font-ui">Belum ada quest finish.</p>
+      <% } %>
+    </div>
+  </div>
+</section>
+
+<div
+  data-qb-modal="create"
+  class="qb-modal fixed inset-0 z-50 hidden items-end justify-center p-3 sm:items-center sm:p-4"
+  aria-hidden="true"
+>
+  <div class="qb-modal__panel w-full max-w-lg overflow-hidden rounded-2xl border border-zinc-700 bg-zinc-900 shadow-2xl shadow-black/60">
+    <div class="flex items-center justify-between border-b border-zinc-700 px-4 py-3">
+      <h3 class="font-display text-[11px] font-bold uppercase tracking-[0.12em] text-zinc-100">Post new quest</h3>
+      <button type="button" data-qb-close="create" class="qb-modal__close rounded-md border border-zinc-600 bg-zinc-800 px-2 py-1 text-[11px] text-zinc-300 hover:text-zinc-100">✕</button>
+    </div>
+    <form method="post" action="/quests/board/create" class="grid grid-cols-1 gap-2 p-4">
+      <p class="rounded-lg border border-zinc-700/80 bg-zinc-950/70 px-3 py-2 font-ui text-[11px] text-zinc-300">
+        Your active level is <span class="font-mono text-zinc-100">Lv <%= levelForCap %></span>.
+        Max post reward: <span class="font-mono text-zinc-100"><%= postExpMax %> EXP</span>,
+        <span class="font-mono text-zinc-100"><%= postAstraMax %> <%= currencyName %></span>,
+        issuer bonus <span class="font-mono text-zinc-100"><%= postIssuerAstraMax %> <%= currencyName %></span>.
+      </p>
+      <label class="grid gap-1">
+        <span class="font-ui text-[11px] text-zinc-400">Quest title</span>
+        <input name="title" required minlength="6" maxlength="120" placeholder="Quest title (e.g. Study 30 minutes)" class="min-h-[42px] rounded-lg border border-zinc-600 bg-zinc-950 px-3 py-2 font-ui text-sm text-zinc-100 outline-none focus:border-violet-500/60" />
+      </label>
+      <label class="grid gap-1">
+        <span class="font-ui text-[11px] text-zinc-400">Objective</span>
+        <textarea name="description" required minlength="8" maxlength="1000" rows="3" placeholder="What should receiver do?" class="rounded-lg border border-zinc-600 bg-zinc-950 px-3 py-2 font-ui text-sm text-zinc-100 outline-none focus:border-violet-500/60"></textarea>
+      </label>
+      <label class="grid gap-1">
+        <span class="font-ui text-[11px] text-zinc-400">Target user (username/email, optional)</span>
+        <input name="recipientLogin" type="text" maxlength="190" placeholder="contoh: fabio_1 atau user@email.com" class="min-h-[40px] rounded-lg border border-zinc-600 bg-zinc-950 px-3 py-2 font-ui text-sm text-zinc-100 outline-none focus:border-violet-500/60" />
+      </label>
+      <div class="grid grid-cols-2 gap-2">
+        <label class="grid gap-1">
+          <span class="font-ui text-[11px] text-zinc-400">Reward EXP</span>
+          <input type="number" min="<%= postExpMin %>" max="<%= postExpMax %>" name="rewardExp" value="<%= Math.min(30, postExpMax) %>" class="min-h-[40px] rounded-lg border border-zinc-600 bg-zinc-950 px-3 py-2 font-ui text-sm text-zinc-100 outline-none focus:border-violet-500/60" />
+        </label>
+        <label class="grid gap-1">
+          <span class="font-ui text-[11px] text-zinc-400">Reward <%= currencyName %></span>
+          <input type="number" min="<%= postAstraMin %>" max="<%= postAstraMax %>" name="rewardAstra" value="<%= Math.min(5, postAstraMax) %>" class="min-h-[40px] rounded-lg border border-zinc-600 bg-zinc-950 px-3 py-2 font-ui text-sm text-zinc-100 outline-none focus:border-violet-500/60" />
+        </label>
+      </div>
+      <div class="grid grid-cols-3 gap-2">
+        <label class="grid gap-1">
+          <span class="font-ui text-[11px] text-zinc-400">Cadence</span>
+          <select name="cadence" class="min-h-[40px] rounded-lg border border-zinc-600 bg-zinc-950 px-2 py-2 font-ui text-sm text-zinc-100 outline-none focus:border-violet-500/60">
+            <option value="daily">daily</option>
+            <option value="weekly">weekly</option>
+          </select>
+        </label>
+        <label class="grid gap-1">
+          <span class="font-ui text-[11px] text-zinc-400">Track</span>
+          <select name="trackTag" class="min-h-[40px] rounded-lg border border-zinc-600 bg-zinc-950 px-2 py-2 font-ui text-sm text-zinc-100 outline-none focus:border-violet-500/60">
+            <option value="STR">STR</option><option value="AGI">AGI</option><option value="VIT">VIT</option><option value="INT">INT</option><option value="DEX">DEX</option><option value="LUK">LUK</option>
+          </select>
+        </label>
+        <label class="grid gap-1">
+          <span class="font-ui text-[11px] text-zinc-400">Issuer bonus <%= currencyName %></span>
+          <input type="number" min="<%= postIssuerAstraMin %>" max="<%= postIssuerAstraMax %>" name="issuerRewardAstra" value="<%= Math.min(2, postIssuerAstraMax) %>" class="min-h-[40px] rounded-lg border border-zinc-600 bg-zinc-950 px-2 py-2 font-ui text-sm text-zinc-100 outline-none focus:border-violet-500/60" />
+        </label>
+      </div>
+      <div class="mt-1 flex items-center justify-between gap-2">
+        <p class="font-ui text-[11px] text-zinc-500">Posting cost: 3 <%= currencyName %></p>
+        <button type="submit" class="inline-flex min-h-[40px] items-center justify-center rounded-lg border border-violet-500/40 bg-violet-950/35 px-4 font-display text-[9px] font-bold uppercase tracking-[0.12em] text-violet-100 transition hover:border-violet-400/60">Post quest</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div
+  data-qb-modal="detail"
+  data-qb-currency="<%= currencyName %>"
+  class="qb-modal fixed inset-0 z-50 hidden items-end justify-center p-3 sm:items-center sm:p-4"
+  aria-hidden="true"
+>
+  <div class="qb-modal__panel w-full max-w-xl overflow-hidden rounded-2xl border border-zinc-700 bg-zinc-900 shadow-2xl shadow-black/60">
+    <div class="flex items-center justify-between border-b border-zinc-700 bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900 px-4 py-3">
+      <h3 id="qb-detail-title" class="font-display text-[12px] font-bold uppercase tracking-[0.12em] text-zinc-100">Quest detail</h3>
+      <button type="button" data-qb-close="detail" class="qb-modal__close rounded-md border border-zinc-600 bg-zinc-800 px-2 py-1 text-[11px] text-zinc-300 hover:text-zinc-100">✕</button>
+    </div>
+    <div class="space-y-3 p-4">
+      <p class="font-ui text-[12px] text-zinc-400">Posted by <span id="qb-detail-issuer" class="font-semibold text-zinc-200">-</span></p>
+      <div class="rounded-xl border border-zinc-700 bg-zinc-950/60 p-3">
+        <p class="font-display text-[9px] font-bold uppercase tracking-[0.12em] text-zinc-500">Objective</p>
+        <p id="qb-detail-desc" class="mt-1 font-ui text-[14px] leading-relaxed text-zinc-200">-</p>
+      </div>
+      <div class="grid grid-cols-1 gap-2 sm:grid-cols-3">
+        <div class="rounded-lg border border-zinc-700 bg-zinc-800/60 px-2.5 py-2">
+          <p class="qb-detail-kicker font-display text-[8px] uppercase tracking-[0.12em]">Reward</p>
+          <p id="qb-detail-reward" class="mt-1 font-mono text-[11px] text-zinc-100">-</p>
+        </div>
+        <div class="rounded-lg border border-zinc-700 bg-zinc-800/60 px-2.5 py-2">
+          <p class="qb-detail-kicker font-display text-[8px] uppercase tracking-[0.12em]">Track</p>
+          <p id="qb-detail-track" class="mt-1 font-mono text-[11px] text-zinc-100">-</p>
+        </div>
+        <div class="rounded-lg border border-amber-500/30 bg-amber-950/20 px-2.5 py-2">
+          <p class="qb-detail-kicker font-display text-[8px] uppercase tracking-[0.12em]">Expiry</p>
+          <p id="qb-detail-expiry" class="mt-1 font-mono text-[11px] text-amber-100">-</p>
+        </div>
+      </div>
+      <p id="qb-detail-why" class="rounded-lg border border-violet-500/25 bg-violet-950/20 px-3 py-2 font-ui text-[12px] leading-relaxed text-violet-100/90">
+        -
+      </p>
+      <form id="qb-detail-accept-form" method="post" action="/quests/board/0/accept" class="pt-1">
+        <button type="submit" class="inline-flex min-h-[42px] items-center justify-center rounded-lg border border-violet-500/40 bg-violet-950/35 px-5 font-display text-[10px] font-bold uppercase tracking-[0.12em] text-violet-100 transition hover:border-violet-400/60">Accept quest</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+</article>
+
+<%- include('../partials/level-up-modal') %>
+
+<script src="/js/toast.js" defer></script>
+<script src="/js/level-up-modal.js" defer></script>
+<script src="/js/reborn-exp-ui.js" defer></script>
+<script src="/js/quests-tabs.js" defer></script>
+<script src="/js/quest-board.js" defer></script>
+

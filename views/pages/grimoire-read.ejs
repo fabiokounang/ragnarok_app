@@ -1,0 +1,70 @@
+<% const a = typeof article !== 'undefined' ? article : null; %>
+<% if (!a) { %>
+<p class="grimoire-reader__missing font-ui text-sm text-zinc-400">Nothing to read here.</p>
+<% } else { %>
+<article class="grimoire-reader mx-auto w-full max-w-prose px-1 pb-6 pt-1 sm:px-2" lang="en">
+  <p class="grimoire-reader__crumb font-ui mb-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[12px] text-zinc-400 sm:text-[13px]">
+    <a href="/daily" class="font-medium text-violet-300 underline decoration-violet-500/50 underline-offset-2 hover:text-violet-200">Daily</a>
+    <span class="text-zinc-600" aria-hidden="true">/</span>
+    <a href="/daily/grimoire/browse" class="font-medium text-violet-300 underline decoration-violet-500/50 underline-offset-2 hover:text-violet-200">Library</a>
+    <% if (a.categoryId) { %>
+    <span class="text-zinc-600" aria-hidden="true">/</span>
+    <a href="/daily/grimoire/category/<%= a.categoryId %>" class="font-medium text-violet-300 underline decoration-violet-500/50 underline-offset-2 hover:text-violet-200"><%= typeof a.categoryTitle !== 'undefined' ? a.categoryTitle : a.categoryId %></a>
+    <% } %>
+  </p>
+  <p class="grimoire-reader__back font-ui mb-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px]">
+    <a
+      href="/daily"
+      class="font-medium text-violet-300 underline decoration-violet-500/50 underline-offset-2 transition-colors hover:text-violet-200 hover:decoration-violet-400/80"
+    >
+      ← Back to daily quests
+    </a>
+    <% if (a.categoryId) { %>
+    <a
+      href="/daily/grimoire/category/<%= a.categoryId %>"
+      class="font-medium text-zinc-400 underline decoration-zinc-600 underline-offset-2 transition-colors hover:text-zinc-200"
+    >
+      More in this topic
+    </a>
+    <% } %>
+    <a
+      href="/daily/grimoire/browse"
+      class="font-medium text-zinc-400 underline decoration-zinc-600 underline-offset-2 transition-colors hover:text-zinc-200"
+    >
+      All topics
+    </a>
+  </p>
+  <% if (a.grimoireDailyPick && a.slug && a.grimoireDateStr) { %>
+  <p class="grimoire-reader__pick font-ui -mt-1 mb-4 rounded-lg border border-violet-500/30 bg-violet-950/35 px-3 py-2 text-[12px] leading-snug text-zinc-300 sm:text-[13px]">
+    <strong class="font-semibold text-zinc-100">Today’s pick</strong> (server date <%= a.grimoireDateStr %>):
+    <strong class="font-semibold text-zinc-100"><%= a.title %></strong>.
+    <span class="text-zinc-500"> Browse the full </span>
+    <a href="/daily/grimoire/category/<%= a.categoryId %>" class="font-medium text-violet-300 underline decoration-violet-500/50 underline-offset-2"><%= typeof a.categoryTitle !== 'undefined' ? a.categoryTitle : a.categoryId %></a>
+    <span class="text-zinc-500"> folder or </span>
+    <a href="/daily/grimoire/browse" class="font-medium text-violet-300 underline decoration-violet-500/50 underline-offset-2">all topics</a>.
+  </p>
+  <% } %>
+  <header class="grimoire-reader__head mb-6 border-b border-zinc-700 pb-5">
+    <p class="grimoire-reader__label font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-500">Grimoire</p>
+    <h1 class="grimoire-reader__title font-display mt-2 text-xl font-bold uppercase leading-tight tracking-[0.04em] text-zinc-50 sm:text-2xl">
+      <%= a.title %>
+    </h1>
+    <p class="grimoire-reader__deck font-ui mt-3 text-[15px] leading-relaxed text-zinc-400 sm:text-base"><%= a.deck %></p>
+  </header>
+  <% a.sections.forEach(function (sec) { %>
+  <section class="grimoire-reader__section mb-8 last:mb-2">
+    <h2 class="grimoire-reader__h2 font-display text-[11px] font-bold uppercase tracking-[0.12em] text-zinc-200 sm:text-xs">
+      <%= sec.heading %>
+    </h2>
+    <% sec.paragraphs.forEach(function (para) { %>
+    <p class="grimoire-reader__p font-ui mt-3 text-[15px] leading-[1.65] text-zinc-300 sm:text-base sm:leading-relaxed"><%= para %></p>
+    <% }); %>
+  </section>
+  <% }); %>
+  <footer class="grimoire-reader__foot mt-10 rounded-xl border border-zinc-600 bg-zinc-900/60 px-4 py-3.5">
+    <p class="font-ui text-[13px] leading-relaxed text-zinc-400">
+      When you are finished, return to <strong class="font-semibold text-zinc-100">Daily</strong> and claim your EXP — your book or course counts the same as this library, as long as you honored the session honestly.
+    </p>
+  </footer>
+</article>
+<% } %>

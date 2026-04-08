@@ -1,0 +1,181 @@
+<div class="auth-window-bar auth-window-bar--register flex min-h-[52px] items-center gap-2 px-2 py-2 sm:gap-3 sm:px-4">
+  <a href="/login" class="auth-bar-back" aria-label="Back to sign in">
+    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+  </a>
+  <div class="min-w-0 flex-1">
+    <span class="font-display block text-[10px] font-bold uppercase leading-tight tracking-[0.18em] text-white/95 sm:text-[11px] sm:tracking-[0.24em]">Novice registration</span>
+    <span class="mt-0.5 block font-display text-[9px] font-semibold uppercase tracking-[0.16em] text-white/55">New character slot</span>
+  </div>
+  <span class="auth-badge-free font-display">Free</span>
+</div>
+
+<div class="auth-window-body px-4 py-5 sm:px-6 sm:py-6">
+  <% if (errors && errors.length) { %>
+    <ul class="auth-alert mb-4 space-y-1.5 rounded-xl border border-red-300/90 bg-red-50 px-3 py-3 text-[15px] text-red-900 sm:px-4 sm:text-sm" role="alert">
+      <% errors.forEach(function (msg) { %>
+        <li class="flex gap-2 pl-0.5">
+          <span class="shrink-0 font-display font-bold text-red-500" aria-hidden="true">!</span>
+          <span><%= msg %></span>
+        </li>
+      <% }); %>
+    </ul>
+  <% } %>
+
+  <p class="auth-form-intro mb-5 text-[15px] leading-relaxed text-zinc-400 sm:text-base">
+    Roll a <strong class="font-semibold text-violet-300">Novice</strong> — job paths and quests unlock as we wire progression. One account, one journey.
+  </p>
+
+  <form method="post" action="/register" class="auth-form-stagger space-y-5" data-auth-form>
+    <div class="auth-stagger-item auth-d1">
+      <label class="auth-label" for="displayName">Display name</label>
+      <div class="auth-input-wrap">
+        <span class="auth-input-icon" aria-hidden="true">
+          <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 12a4 4 0 100-8 4 4 0 000 8z"/><path d="M4 22c1.5-6 7-8 8-8s6.5 2 8 8"/></svg>
+        </span>
+        <input
+          id="displayName"
+          name="displayName"
+          type="text"
+          autocomplete="nickname"
+          enterkeyhint="next"
+          maxlength="80"
+          value="<%= form.displayName %>"
+          class="auth-input"
+          placeholder="Shown on boards & profile"
+          required
+        />
+      </div>
+      <p class="auth-field-hint mt-1.5 font-display text-[9px] font-semibold uppercase tracking-[0.12em] text-zinc-500">Public · max 80 characters</p>
+    </div>
+
+    <div class="auth-stagger-item auth-d2">
+      <label class="auth-label" for="username">Username</label>
+      <div class="auth-input-wrap">
+        <span class="auth-input-icon" aria-hidden="true">
+          <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 7h16M4 12h10M4 17h16"/></svg>
+        </span>
+        <input
+          id="username"
+          name="username"
+          type="text"
+          inputmode="text"
+          autocomplete="username"
+          enterkeyhint="next"
+          maxlength="32"
+          value="<%= form.username %>"
+          class="auth-input"
+          placeholder="lowercase, angka, underscore"
+          required
+        />
+      </div>
+      <p class="auth-field-hint mt-1.5 font-display text-[9px] font-semibold uppercase tracking-[0.12em] text-zinc-500">3-32 chars · a-z 0-9 _</p>
+    </div>
+
+    <div class="auth-stagger-item auth-d3">
+      <label class="auth-label" for="email">Email</label>
+      <div class="auth-input-wrap">
+        <span class="auth-input-icon" aria-hidden="true">
+          <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6h16v12H4z"/><path d="M4 8l8 6 8-6"/></svg>
+        </span>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          inputmode="email"
+          autocomplete="email"
+          enterkeyhint="next"
+          value="<%= form.email %>"
+          class="auth-input"
+          placeholder="you@example.com"
+          required
+        />
+      </div>
+    </div>
+
+    <div class="auth-stagger-item auth-d4 py-0.5">
+      <div class="auth-rune-divider" role="presentation">
+        <span class="auth-rune-diamond" aria-hidden="true"></span>
+        <span class="font-display text-[9px] font-semibold uppercase tracking-[0.22em] text-[#6b4c9a]/70">Kafra seal · credentials</span>
+        <span class="auth-rune-diamond" aria-hidden="true"></span>
+      </div>
+    </div>
+
+    <div class="auth-stagger-item auth-d5">
+      <label class="auth-label" for="reg-password">Password</label>
+      <div class="auth-input-wrap auth-input-wrap-password">
+        <span class="auth-input-icon" aria-hidden="true">
+          <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 11V8a5 5 0 0110 0v3"/><rect x="5" y="11" width="14" height="10" rx="2"/></svg>
+        </span>
+        <input
+          id="reg-password"
+          name="password"
+          type="password"
+          autocomplete="new-password"
+          enterkeyhint="next"
+          minlength="8"
+          class="auth-input"
+          placeholder="Min. 8 characters"
+          required
+        />
+        <button type="button" class="auth-password-toggle" data-password-toggle="reg-password" aria-label="Show password" aria-pressed="false">
+          <span class="auth-toggle-icon auth-toggle-icon--off" aria-hidden="true">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+          </span>
+          <span class="auth-toggle-icon auth-toggle-icon--on hidden" aria-hidden="true">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 3l18 18M10.6 10.6a3 3 0 004.8 4.8M9.9 5.1A10.3 10.3 0 0112 5c6 0 10 7 10 7a18 18 0 01-5.2 6.2M6.3 6.3C3.7 8.2 2 12 2 12s4 7 10 7a9.9 9.9 0 005-1.4"/></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <div class="auth-stagger-item auth-d6">
+      <label class="auth-label" for="confirmPassword">Confirm password</label>
+      <div class="auth-input-wrap auth-input-wrap-password">
+        <span class="auth-input-icon" aria-hidden="true">
+          <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 13l4 4L19 7"/></svg>
+        </span>
+        <input
+          id="confirmPassword"
+          name="confirmPassword"
+          type="password"
+          autocomplete="new-password"
+          enterkeyhint="go"
+          class="auth-input"
+          placeholder="Match password above"
+          required
+        />
+        <button type="button" class="auth-password-toggle" data-password-toggle="confirmPassword" aria-label="Show password" aria-pressed="false">
+          <span class="auth-toggle-icon auth-toggle-icon--off" aria-hidden="true">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+          </span>
+          <span class="auth-toggle-icon auth-toggle-icon--on hidden" aria-hidden="true">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 3l18 18M10.6 10.6a3 3 0 004.8 4.8M9.9 5.1A10.3 10.3 0 0112 5c6 0 10 7 10 7a18 18 0 01-5.2 6.2M6.3 6.3C3.7 8.2 2 12 2 12s4 7 10 7a9.9 9.9 0 005-1.4"/></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <div class="auth-stagger-item auth-d7 pt-1">
+      <button type="submit" class="launch-btn-primary auth-btn-ro flex min-h-[52px] w-full items-center justify-center gap-2 rounded-xl px-4 font-display text-sm font-bold uppercase tracking-[0.1em] sm:tracking-[0.12em]">
+        <span class="auth-btn-label">Begin as Novice</span>
+        <span class="auth-btn-spinner hidden h-5 w-5 shrink-0 animate-spin rounded-full border-2 border-white/35 border-t-white" aria-hidden="true"></span>
+      </button>
+    </div>
+  </form>
+
+  <div class="auth-card-footer auth-card-footer--promo auth-fade-late mt-5 rounded-xl sm:mt-6">
+    <div class="auth-footer-promo">
+      <div class="auth-footer-promo__mark auth-footer-promo__mark--login" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div class="auth-footer-promo__copy">
+        <p class="auth-footer-promo__title">Already registered?</p>
+        <p class="auth-footer-promo__sub">Sign in to continue your quests.</p>
+      </div>
+    </div>
+    <a href="/login" class="auth-footer-cta auth-footer-cta--login">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      <span>Sign in</span>
+    </a>
+  </div>
+</div>

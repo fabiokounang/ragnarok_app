@@ -1,0 +1,52 @@
+const express = require('express');
+const router = express.Router();
+const { requireAuth } = require('../middleware/requireAuth');
+const { requirePastNovice } = require('../middleware/requirePastNovice');
+const dashboardController = require('../controllers/dashboardController');
+const dailyController = require('../controllers/dailyController');
+const onboardingController = require('../controllers/onboardingController');
+const questBoardController = require('../controllers/questBoardController');
+
+router.get('/', dashboardController.redirectRoot);
+
+router.use(requireAuth);
+router.get('/choose-job', onboardingController.getChooseJob);
+router.post('/choose-job', onboardingController.postChooseJob);
+
+router.use(requirePastNovice);
+router.get('/daily', dailyController.getDaily);
+router.get('/daily/history', dailyController.getDailyHistory);
+router.get('/daily/grimoire/browse', dailyController.getGrimoireBrowse);
+router.get('/daily/grimoire/category/:categoryId', dailyController.getGrimoireCategory);
+router.get('/daily/grimoire/article/:slug', dailyController.getGrimoireArticleBySlug);
+router.get('/daily/grimoire/:slug', dailyController.getGrimoireRead);
+router.post('/daily/morning-pick', dailyController.postMorningPick);
+router.post('/daily/note', dailyController.postDailyTaskNote);
+router.post('/daily/reflection', dailyController.postDailyReflection);
+router.post('/daily/accept', dailyController.postAcceptDailyTask);
+router.post('/daily/complete', dailyController.postCompleteDailyTask);
+router.post('/weekly/accept', dailyController.postAcceptWeeklyTask);
+router.post('/weekly/complete', dailyController.postCompleteWeeklyTask);
+router.get('/training', dashboardController.getTraining);
+router.post('/training/complete', dashboardController.postTrainingComplete);
+router.post('/training/routine/create', dashboardController.postTrainingRoutineCreate);
+router.post('/training/routine/update', dashboardController.postTrainingRoutineUpdate);
+router.post('/training/routine/delete', dashboardController.postTrainingRoutineDelete);
+router.get('/inventory', dashboardController.getInventory);
+router.post('/inventory/vault', dashboardController.postVaultShop);
+router.get('/profile', dashboardController.getProfile);
+router.get('/profile/jobs/add', dashboardController.getProfileAddJob);
+router.post('/profile/job/active', dashboardController.postProfileJobActive);
+router.post('/profile/job/slot', dashboardController.postProfileJobSlot);
+router.post('/profile/job/remove', dashboardController.postProfileJobRemove);
+router.post('/profile/job/advance', dashboardController.postProfileJobAdvance);
+router.post('/profile/stat', dashboardController.postProfileStat);
+router.post('/profile/music', dashboardController.postProfileMusic);
+router.get('/quests', dashboardController.getQuests);
+router.post('/quests/board/create', questBoardController.postCreateQuest);
+router.post('/quests/board/:questId/accept', questBoardController.postAcceptQuest);
+router.post('/quests/board/:questId/submit', questBoardController.postSubmitQuest);
+router.post('/quests/board/:questId/review', questBoardController.postReviewQuest);
+router.get('/leaderboard', dashboardController.getLeaderboard);
+
+module.exports = router;

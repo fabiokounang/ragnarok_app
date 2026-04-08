@@ -1,0 +1,95 @@
+## Production and allocation
+
+An economy is the system for producing goods and services and distributing them. Because labor, land, time, and materials are finite, every choice has an opportunity cost — what you give up by choosing A over B.
+
+Microeconomics zooms in on households and firms; macroeconomics tracks aggregates like unemployment, inflation, and national output. Both lenses answer different questions; neither alone explains a newspaper headline completely.
+
+## Markets and other mechanisms
+
+Prices coordinate many decisions without a central planner for every detail. Governments still set rules, provide public goods, tax, and redistribute — the mix is political.
+
+Command economies tried tight central plans; mixed economies blend markets with regulation and welfare states. Debates are usually about balance and enforcement, not about whether coordination is needed at all.
+
+## Institutions matter
+
+Property rights, contract enforcement, and trusted money lower the cost of cooperation. Where those fail, even talented people struggle to invest long term.
+
+## Deeper dive — part 1
+
+Public goods are non-rival and non-excludable in theory — clean air, national defense, basic scientific knowledge — which is why markets alone underfund them without taxes or collective rules.
+
+Information asymmetry appears when sellers know more than buyers (used cars, complex insurance), inviting screening, signaling, warranties, and regulation to reduce fraud or mistaken trades.
+
+Behavioral economics documents predictable human quirks: present bias, loss aversion, anchoring — useful for designing savings defaults and for skepticism toward models that assume perfect rationality.
+
+The Phillips curve once summarized a tradeoff between inflation and unemployment; experience since the 1970s showed supply shocks and expectations can break a simple short-run relationship.
+
+## Deeper dive — part 2
+
+Central bank independence is designed to separate day-to-day politics from interest-rate decisions, though mandates and appointments remain unavoidably political at a constitutional level.
+
+Fiscal multipliers ask how much GDP moves when the government spends a dollar; estimates differ by whether the economy is slack, how financing works, and whether imports leak demand abroad.
+
+The Laffer curve is a pedagogical curve: tax revenue hits zero at rates of zero and (theoretically) at one hundred percent, with a peak between — but the peak’s location is an empirical fight, not a slogan.
+
+Human capital investment — education, training, health — raises productivity and wages over decades; cutting those budgets to “save money” often shifts costs to slower growth and higher social spending later.
+
+## Deeper dive — part 3
+
+Urban economics links agglomeration: people and firms cluster because proximity speeds matching, sharing infrastructure, and idea spillovers — but also raises housing costs and congestion.
+
+Environmental economics prices nature imperfectly: GDP rises when you cut a forest and sell timber, even if watersheds and biodiversity collapse — green accounting tries to widen the scorecard.
+
+Inequality metrics (Gini, percentile shares) describe distribution; they do not by themselves tell you whether the process is fair, efficient, or stable — those are moral and political layers on top.
+
+Sovereign debt crises mix math and credibility: if markets believe a state will inflate away obligations or default, rates spike and the fear can become self-fulfilling without a credible plan.
+
+## Deeper dive — part 4
+
+Labor markets are not like apple markets: wages are sticky, contracts lag shocks, and norms about fairness influence whether firms cut pay versus headcount during downturns.
+
+Productivity growth is the deep engine of higher living standards: better tools, better skills, better organization — not simply working longer hours, which hits biological and social limits.
+
+Antitrust debates ask when big firms help consumers through scale and when they harm through exclusion — “bigness” is not automatically evil or good; market structure and conduct matter.
+
+Development economics studies why some countries escape poverty traps: institutions, geography, history, health, education, and openness to ideas interact; single-factor stories rarely suffice.
+
+## Deeper dive — part 5
+
+Real versus nominal: economists stress “real” values adjusted for inflation so you compare purchasing power across years; nominal headlines can mislead when the price level moves fast.
+
+Crowding out suggests government borrowing can raise interest rates and displace private investment; crowding in happens when public infrastructure makes private projects more profitable.
+
+The impossible trinity (open-economy macro) claims you cannot simultaneously have fixed exchange rates, free capital movement, and independent monetary policy — something must give.
+
+Moral hazard appears when insurance dulls caution: bank bailouts without restructuring can encourage future risk-taking unless regulation and capital rules tighten in parallel.
+
+## Deeper dive — part 6
+
+Gender and race gaps in pay and wealth reflect overlapping forces: discrimination, sorting, network access, occupational choice, and cumulative small disadvantages that compound over careers.
+
+Opportunity cost is the unchosen path: when a city builds a stadium, the cost includes whatever else those bricks and hours could have produced, not only the invoice from the contractor.
+
+Comparative advantage explains why countries trade even when one could technically outproduce another in every good: relative efficiency, not absolute dominance, sets the pattern of specialization.
+
+Price ceilings, like rent caps, can shrink the supply landlords offer or reduce maintenance incentives; price floors, like agricultural supports, can create surpluses that require storage or disposal policy.
+
+## Deeper dive — part 7
+
+Externalities spill costs or benefits onto bystanders: vaccination helps the vaccinated person and also lowers risk for strangers; pollution from a factory hits lungs downwind who never bought the product.
+
+Public goods are non-rival and non-excludable in theory — clean air, national defense, basic scientific knowledge — which is why markets alone underfund them without taxes or collective rules.
+
+Information asymmetry appears when sellers know more than buyers (used cars, complex insurance), inviting screening, signaling, warranties, and regulation to reduce fraud or mistaken trades.
+
+Behavioral economics documents predictable human quirks: present bias, loss aversion, anchoring — useful for designing savings defaults and for skepticism toward models that assume perfect rationality.
+
+## Deeper dive — part 8
+
+The Phillips curve once summarized a tradeoff between inflation and unemployment; experience since the 1970s showed supply shocks and expectations can break a simple short-run relationship.
+
+Central bank independence is designed to separate day-to-day politics from interest-rate decisions, though mandates and appointments remain unavoidably political at a constitutional level.
+
+Fiscal multipliers ask how much GDP moves when the government spends a dollar; estimates differ by whether the economy is slack, how financing works, and whether imports leak demand abroad.
+
+The Laffer curve is a pedagogical curve: tax revenue hits zero at rates of zero and (theoretically) at one hundred percent, with a peak between — but the peak’s location is an empirical fight, not a slogan.

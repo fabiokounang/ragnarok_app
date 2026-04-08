@@ -1,0 +1,461 @@
+<%
+  const coreN = typeof coreTotal === 'number' ? coreTotal : 0;
+  const coreD = typeof coreDone === 'number' ? coreDone : 0;
+  const corePct = coreN > 0 ? Math.min(100, Math.round((coreD / coreN) * 100)) : 0;
+  const bonusN = typeof bonusTotal === 'number' ? bonusTotal : 0;
+  const bonusD = typeof bonusDone === 'number' ? bonusDone : 0;
+  const bonusPct = bonusN > 0 ? Math.min(100, Math.round((bonusD / bonusN) * 100)) : 0;
+
+  const ws = typeof weekStart === 'string' ? weekStart : '';
+  const we = typeof weekEnd === 'string' ? weekEnd : '';
+  const wSum = typeof weeklySummary !== 'undefined' && weeklySummary ? weeklySummary : {};
+  const wRegN = typeof wSum.weeklyTotal === 'number' ? wSum.weeklyTotal : 0;
+  const wRegD = typeof wSum.weeklyDone === 'number' ? wSum.weeklyDone : 0;
+  const wRegPct = wRegN > 0 ? Math.min(100, Math.round((wRegD / wRegN) * 100)) : 0;
+  const wBossN = typeof wSum.bossTotal === 'number' ? wSum.bossTotal : 0;
+  const wBossD = typeof wSum.bossDone === 'number' ? wSum.bossDone : 0;
+  const wBossPct = wBossN > 0 ? Math.min(100, Math.round((wBossD / wBossN) * 100)) : 0;
+  const weeklyRegularList = typeof weeklyRegularTasks !== 'undefined' && Array.isArray(weeklyRegularTasks) ? weeklyRegularTasks : [];
+  const weeklyBossList = typeof weeklyBossTasks !== 'undefined' && Array.isArray(weeklyBossTasks) ? weeklyBossTasks : [];
+  const weeklyBoardReady = !!ws && !!we;
+
+  const ssrToasts = [];
+  if (typeof flashGained === 'number' && flashGained > 0) {
+    ssrToasts.push({
+      type: 'success',
+      title: 'EXP earned',
+      message: '+' + flashGained + ' EXP flows into your current class.',
+      duration: 7000,
+    });
+  }
+  if (typeof flashQuestAccepted !== 'undefined' && flashQuestAccepted) {
+    ssrToasts.push({
+      type: 'info',
+      title: 'Quest accepted',
+      message: 'Do the work in real life, check in as you go — the last step claims your reward.',
+      duration: 7000,
+    });
+  }
+  if (
+    typeof flashBonusProgress !== 'undefined' &&
+    flashBonusProgress &&
+    flashBonusProgress.current != null &&
+    flashBonusProgress.target != null
+  ) {
+    ssrToasts.push({
+      type: 'progress',
+      title: 'Progress saved',
+      message:
+        flashBonusProgress.current +
+        '/' +
+        flashBonusProgress.target +
+        ' — steady steps. Final check-in claims the EXP.',
+      duration: 8000,
+    });
+  }
+  if (typeof morningReadyFlash !== 'undefined' && morningReadyFlash && morningReadyFlash.text) {
+    ssrToasts.push({
+      type: 'info',
+      title: 'Party set',
+      message: morningReadyFlash.text,
+      duration: 9000,
+    });
+  }
+  var dailyFlowPhase = dailyPhase === 'morning_pick' ? 'morning_pick' : 'active';
+  var questInitialTab = typeof questTab === 'string' && questTab === 'weekly' ? 'weekly' : 'daily';
+%>
+
+<article id="daily-page" class="daily-page rb-quest-hall relative w-full min-w-0 px-4 pb-6 pt-3 sm:px-5 sm:pb-8 sm:pt-4 md:px-6 md:pt-5">
+  <% if (typeof dailyNotice !== 'undefined' && dailyNotice && dailyNotice.text) { %>
+  <div class="mb-4 rounded-2xl border border-amber-500/35 bg-amber-950/40 px-4 py-3 font-ui text-[12px] leading-relaxed text-amber-100 sm:text-[13px]" role="status">
+    <%= dailyNotice.text %>
+  </div>
+  <% } %>
+  <% if (typeof reflectionFlash !== 'undefined' && reflectionFlash && reflectionFlash.text) { %>
+  <div
+    class="mb-4 rounded-2xl border px-4 py-3 font-ui text-[12px] font-semibold sm:text-[13px] <%= reflectionFlash.type === 'err' ? 'border-rose-500/40 bg-rose-950/45 text-rose-100' : 'border-emerald-500/35 bg-emerald-950/40 text-emerald-100' %>"
+    role="status"
+  >
+    <%= reflectionFlash.text %>
+  </div>
+  <% } %>
+
+  <header class="rb-quest-board-head mb-4 sm:mb-5">
+    <div class="flex items-start justify-between gap-3">
+      <div class="min-w-0">
+        <p class="font-display text-[9px] font-bold uppercase tracking-[0.22em] text-zinc-500">Guild hall</p>
+        <h1 class="mt-1 font-display text-xl font-bold tracking-tight text-zinc-50 sm:text-2xl">Tasks</h1>
+      </div>
+      <div class="mt-0.5 flex shrink-0 items-center gap-1.5">
+        <a
+          href="/daily/history"
+          class="inline-flex items-center gap-1.5 rounded-lg border border-zinc-700/90 bg-zinc-900/80 px-2.5 py-1.5 font-display text-[9px] font-bold uppercase tracking-[0.12em] text-zinc-300 shadow-sm transition hover:border-zinc-500 hover:bg-zinc-800 hover:text-zinc-100"
+          title="Open quest journal"
+        >
+          <span aria-hidden="true">📜</span>
+          <span>Journal</span>
+        </a>
+        <button
+          type="button"
+          id="daily-guide-trigger"
+          class="daily-guide-trigger inline-flex items-center gap-1.5 rounded-lg border border-zinc-700/90 bg-zinc-900/80 px-2.5 py-1.5 font-display text-[9px] font-bold uppercase tracking-[0.12em] text-zinc-300 shadow-sm transition hover:border-zinc-500 hover:bg-zinc-800 hover:text-zinc-100"
+          aria-haspopup="dialog"
+          aria-controls="daily-guide-modal"
+          aria-expanded="false"
+          title="Open rhythm and tips guide"
+          data-guide-trigger
+          data-guide-target="daily-guide-modal"
+        >
+          <span aria-hidden="true">?</span>
+          <span>Rhythm &amp; tips</span>
+        </button>
+        <button
+          type="button"
+          id="daily-streak-trigger"
+          class="inline-flex items-center gap-1.5 rounded-lg border border-zinc-700/90 bg-zinc-900/80 px-2.5 py-1.5 font-display text-[9px] font-bold uppercase tracking-[0.12em] text-zinc-300 shadow-sm transition hover:border-zinc-500 hover:bg-zinc-800 hover:text-zinc-100"
+          aria-haspopup="dialog"
+          aria-controls="daily-streak-modal"
+          aria-expanded="false"
+          title="Open streak note"
+          data-guide-trigger
+          data-guide-target="daily-streak-modal"
+        >
+          <span aria-hidden="true">🔥</span>
+          <span>Streak note</span>
+        </button>
+      </div>
+    </div>
+    <p class="mt-1 max-w-md font-ui text-[13px] leading-relaxed text-zinc-400">
+      Today&rsquo;s board and the week&rsquo;s arc — pick a tab, work honestly, claim your growth.
+    </p>
+  </header>
+
+  <div
+    class="quest-tab-bar relative mb-4 flex w-full min-w-0 gap-1.5 rounded-2xl border border-zinc-700/80 bg-zinc-900/80 p-1 shadow-inner shadow-black/40 sm:mb-5"
+    role="tablist"
+    aria-label="Quest schedule"
+  >
+    <button
+      type="button"
+      role="tab"
+      id="quest-tab-daily"
+      class="quest-tab-btn relative min-w-0 flex-1 rounded-xl px-3 py-2.5 text-center font-display text-[10px] font-bold uppercase tracking-[0.12em] transition focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 sm:py-3 sm:text-[11px] <%= questInitialTab === 'daily' ? 'border border-zinc-500 bg-zinc-800 text-zinc-50 shadow-md shadow-black/30' : 'border border-transparent text-zinc-500 hover:bg-zinc-800/60 hover:text-zinc-200' %>"
+      aria-selected="<%= questInitialTab === 'daily' ? 'true' : 'false' %>"
+      aria-controls="quest-panel-daily"
+      data-quest-tab="daily"
+      tabindex="<%= questInitialTab === 'daily' ? '0' : '-1' %>"
+    >
+      <span class="block">Daily</span>
+      <span class="mt-0.5 block font-ui text-[9px] font-normal normal-case tracking-normal text-zinc-500 sm:text-[10px]">Today&rsquo;s board</span>
+    </button>
+    <button
+      type="button"
+      role="tab"
+      id="quest-tab-weekly"
+      class="quest-tab-btn relative min-w-0 flex-1 rounded-xl px-3 py-2.5 text-center font-display text-[10px] font-bold uppercase tracking-[0.12em] transition focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 sm:py-3 sm:text-[11px] <%= questInitialTab === 'weekly' ? 'border border-zinc-500 bg-zinc-800 text-zinc-50 shadow-md shadow-black/30' : 'border border-transparent text-zinc-500 hover:bg-zinc-800/60 hover:text-zinc-200' %>"
+      aria-selected="<%= questInitialTab === 'weekly' ? 'true' : 'false' %>"
+      aria-controls="quest-panel-weekly"
+      data-quest-tab="weekly"
+      tabindex="<%= questInitialTab === 'weekly' ? '0' : '-1' %>"
+    >
+      <span class="block">Weekly</span>
+      <span class="mt-0.5 block font-ui text-[9px] font-normal normal-case tracking-normal text-zinc-500 sm:text-[10px]">Slower arc · Monday reset</span>
+    </button>
+  </div>
+
+  <div
+    id="daily-guide-modal"
+    class="daily-guide-modal daily-guide-modal--layer hidden"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="daily-guide-modal-title"
+    aria-hidden="true"
+  >
+    <div
+      class="daily-guide-modal__backdrop"
+      data-guide-backdrop
+      aria-hidden="true"
+    ></div>
+    <div
+      class="daily-guide-modal__panel relative z-[1] max-h-[min(90dvh,42rem)] w-full max-w-lg overflow-y-auto overscroll-contain rounded-2xl border border-zinc-700/80 bg-zinc-900 shadow-xl shadow-black/50"
+    >
+      <button
+        type="button"
+        class="absolute right-2 top-2 z-20 flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-600 bg-zinc-800 text-zinc-300 shadow-sm transition hover:bg-zinc-700 hover:text-zinc-50 sm:right-3 sm:top-3"
+        aria-label="Close board guide"
+        data-guide-close
+      >
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+
+      <div class="min-w-0 px-4 pb-5 pt-4 pr-14 sm:px-6 sm:pb-6 sm:pt-5 sm:pr-16">
+        <h2 id="daily-guide-modal-title" class="font-display text-[10px] font-bold uppercase tracking-[0.22em] text-amber-300">Rhythm &amp; tips</h2>
+        <p class="mt-1 font-ui text-[12px] leading-snug text-zinc-400 sm:text-[13px]">Same flow on <strong class="font-semibold text-zinc-200">Daily</strong> and <strong class="font-semibold text-zinc-200">Weekly</strong>: choose honestly, check in as you go, then claim your EXP when the quest is truly done.</p>
+
+        <div class="mt-4 grid gap-3 sm:grid-cols-3">
+          <div class="rounded-xl border border-sky-700/50 bg-sky-950/40 px-3 py-2.5">
+            <p class="font-display text-[9px] font-bold uppercase tracking-wider text-sky-300">Dawn</p>
+            <p class="mt-1 font-ui text-[11px] leading-snug text-zinc-400">On dailies: pick up to three class quests, peek base EXP and streak warmth, then lock your lineup and begin.</p>
+          </div>
+          <div class="rounded-xl border border-zinc-600 bg-zinc-800/60 px-3 py-2.5">
+            <p class="font-display text-[9px] font-bold uppercase tracking-wider text-amber-200">Path</p>
+            <p class="mt-1 font-ui text-[11px] leading-snug text-zinc-400">Start each quest, tap check-ins as you finish real steps; bars fill with your truth. Notes are optional proof for future-you.</p>
+          </div>
+          <div class="rounded-xl border border-indigo-600/40 bg-indigo-950/35 px-3 py-2.5">
+            <p class="font-display text-[9px] font-bold uppercase tracking-wider text-indigo-200">Hearth</p>
+            <p class="mt-1 font-ui text-[11px] leading-snug text-zinc-400">Last check-in pays the EXP; dailies get a short reflection. Level and streak glow when you close a quest — no rush, only progress.</p>
+          </div>
+        </div>
+
+        <p class="mt-3 font-ui text-[10px] leading-snug text-zinc-500">
+          Pillars you&rsquo;ll see on cards: <strong class="font-semibold text-zinc-300">Body · Mind · Focus · Money · Craft · Recovery</strong>.
+        </p>
+
+        <div class="mt-4 border-t border-zinc-700/50 pt-4">
+          <h3 class="font-display text-[9px] font-bold uppercase tracking-[0.18em] text-amber-300/90">Wisdom of the board</h3>
+          <ul class="mt-2 list-disc space-y-2 pl-4 font-ui text-[11px] leading-relaxed text-zinc-400 sm:text-[12px]">
+            <li>
+              <strong class="font-semibold text-zinc-200">Novice path</strong> — Wander the dailies until <strong class="font-semibold text-zinc-200">level 10</strong>, then swear your first class on <strong class="font-semibold text-zinc-200">Choose Job</strong>.
+            </li>
+            <li>
+              <strong class="font-semibold text-zinc-200">Morning lineup</strong> — Lock <strong class="font-semibold text-zinc-200">1–3</strong> quests from today&rsquo;s offers before the day runs away.
+            </li>
+            <li>
+              <strong class="font-semibold text-zinc-200">Alternate routes</strong> are different flavors of the same quest — pick <strong class="font-semibold text-zinc-200">one</strong> you actually lived.
+            </li>
+            <li>
+              <strong class="font-semibold text-zinc-200">EXP feel</strong> — Easy ~10–20, medium ~30–50, hard ~60–100 (honor system; the bar is yours).
+            </li>
+            <li>
+              Dailies <strong class="font-semibold text-zinc-200">turn over at server midnight</strong>. Weeklies rest on <strong class="font-semibold text-zinc-200">Mondays</strong>.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    id="daily-streak-modal"
+    class="daily-guide-modal daily-guide-modal--layer hidden"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="daily-streak-modal-title"
+    aria-hidden="true"
+  >
+    <div
+      class="daily-guide-modal__backdrop"
+      data-guide-backdrop
+      aria-hidden="true"
+    ></div>
+    <div
+      class="daily-guide-modal__panel relative z-[1] max-h-[min(90dvh,34rem)] w-full max-w-md overflow-y-auto overscroll-contain rounded-2xl border border-zinc-700/80 bg-zinc-900 shadow-xl shadow-black/50"
+    >
+      <button
+        type="button"
+        class="absolute right-2 top-2 z-20 flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-600 bg-zinc-800 text-zinc-300 shadow-sm transition hover:bg-zinc-700 hover:text-zinc-50 sm:right-3 sm:top-3"
+        aria-label="Close streak note"
+        data-guide-close
+      >
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+
+      <div class="min-w-0 px-4 pb-5 pt-4 pr-14 sm:px-6 sm:pb-6 sm:pt-5 sm:pr-16">
+        <h2 id="daily-streak-modal-title" class="font-display text-[10px] font-bold uppercase tracking-[0.22em] text-orange-300">Streak note</h2>
+        <p class="mt-2 font-ui text-[12px] leading-relaxed text-zinc-300 sm:text-[13px]">
+          Each quest card tracks its own streak (shown as 🔥 on the card). This streak reflects consistency on that specific quest.
+        </p>
+        <p class="mt-2 font-ui text-[12px] leading-relaxed text-zinc-400 sm:text-[13px]">
+          Current extra EXP streak bonus applies to the <strong class="font-semibold text-zinc-200">first core clear on Daily</strong>.
+          Weekly cards still keep their own streak history for momentum.
+        </p>
+        <p class="mt-2 font-ui text-[12px] leading-relaxed text-zinc-400 sm:text-[13px]">
+          Today&rsquo;s Daily streak bonus potential:
+          <span class="font-mono font-semibold tabular-nums text-emerald-300"><%= typeof streakBonusPotential === 'number' ? streakBonusPotential : 0 %> EXP</span>
+          <% if (typeof remainingCoreExpPotential === 'number' && remainingCoreExpPotential > 0) { %>
+          <span class="text-zinc-500">·</span> remaining core base EXP:
+          <span class="font-mono font-semibold tabular-nums text-zinc-200"><%= remainingCoreExpPotential %></span>.
+          <% } %>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div
+    id="quest-panel-daily"
+    role="tabpanel"
+    aria-labelledby="quest-tab-daily"
+    class="quest-tab-panel <%= questInitialTab === 'weekly' ? 'hidden' : '' %>"
+  >
+
+  <% if (dailyFlowPhase === 'morning_pick') { %>
+  <%- include('../partials/daily-morning-board') %>
+  <% } %>
+
+  <% if (dailyFlowPhase === 'active') { %>
+  <section class="mb-8 md:mb-10">
+    <div class="mb-4 flex flex-col gap-1 sm:mb-5 sm:flex-row sm:items-end sm:justify-between">
+      <div class="flex items-center gap-3">
+        <span class="daily-section-label__bar daily-section-label__bar--core h-10 w-1 shrink-0 rounded-full sm:h-12" aria-hidden="true"></span>
+        <div class="min-w-0">
+          <div class="flex flex-wrap items-center gap-2">
+            <h3 class="font-display text-sm font-bold uppercase tracking-[0.14em] text-sky-300 sm:text-base">Core missions</h3>
+            <span class="inline-flex w-fit items-center gap-1.5 rounded-lg border border-sky-500/30 bg-sky-500/10 px-2.5 py-1 font-mono text-[11px] font-semibold tabular-nums text-sky-200">
+              <span id="daily-core-done"><%= coreD %></span><span class="text-sky-400/70">/</span><span id="daily-core-total"><%= coreN %></span>
+            </span>
+          </div>
+          <p class="mt-0.5 font-ui text-[12px] text-zinc-500 sm:text-[13px]">Grouped by pillar · main dailies for your job.</p>
+        </div>
+      </div>
+    </div>
+    <% if (!coreTasks || !coreTasks.length) { %>
+    <p class="rounded-2xl border border-dashed border-zinc-600 bg-zinc-900 px-4 py-10 text-center font-ui text-sm text-zinc-400">No core tasks for this job yet — check seeds or switch job in Character.</p>
+    <% } else { %>
+    <ul class="daily-task-list">
+      <% coreTasks.forEach(function (t) { %>
+      <%- include('../partials/daily-task-row', { task: t, bonusMult: null }) %>
+      <% }); %>
+    </ul>
+    <% } %>
+  </section>
+  <% } %>
+
+  <% if (dailyFlowPhase === 'active' && bonusTasks && bonusTasks.length) { %>
+  <section class="mb-4 md:mb-6">
+    <div class="mb-4 flex flex-col gap-1 sm:mb-5 sm:flex-row sm:items-end sm:justify-between">
+      <div class="flex items-center gap-3">
+        <span class="daily-section-label__bar daily-section-label__bar--bonus h-10 w-1 shrink-0 rounded-full sm:h-12" aria-hidden="true"></span>
+        <div class="min-w-0">
+          <div class="flex flex-wrap items-center gap-2">
+            <h3 class="font-display text-sm font-bold uppercase tracking-[0.14em] text-amber-200 sm:text-base">Bonus board <span class="font-ui text-[11px] font-semibold normal-case tracking-normal text-zinc-500">(optional)</span></h3>
+            <span class="inline-flex w-fit items-center gap-1.5 rounded-lg border border-amber-500/30 bg-amber-500/10 px-2.5 py-1 font-mono text-[11px] font-semibold tabular-nums text-amber-200">
+              <span id="daily-bonus-done"><%= bonusD %></span><span class="text-amber-300/70">/</span><span id="daily-bonus-total"><%= bonusN %></span>
+            </span>
+          </div>
+          <p class="mt-0.5 font-ui text-[12px] text-zinc-500 sm:text-[13px]">Harder routes — bigger EXP multipliers when you clear them.</p>
+        </div>
+      </div>
+    </div>
+    <ul class="daily-task-list">
+      <% bonusTasks.forEach(function (t) { %>
+      <%- include('../partials/daily-task-row', { task: t, bonusMult: typeof bonusExpMultiplier === 'number' ? bonusExpMultiplier : null }) %>
+      <% }); %>
+    </ul>
+  </section>
+  <% } %>
+
+  <% if (dailyFlowPhase === 'active') { %>
+  <section class="mb-8 rounded-2xl border border-zinc-700/80 bg-zinc-900 p-5 shadow-sm md:rounded-3xl md:p-6" aria-labelledby="reflection-heading">
+    <h2 id="reflection-heading" class="font-display text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-50">Evening reflection</h2>
+    <p class="mt-1 font-ui text-[12px] leading-relaxed text-zinc-400">
+      One honest line about today (wins, friction, or gratitude). Saved per calendar day — edit anytime before midnight.
+    </p>
+    <form action="/daily/reflection" method="post" class="mt-3 space-y-2" data-auth-form>
+      <label class="sr-only" for="daily-reflection-body">Reflection</label>
+      <textarea
+        id="daily-reflection-body"
+        name="body"
+        rows="3"
+        maxlength="2000"
+        class="w-full rounded-xl border border-zinc-600 bg-zinc-950 px-3 py-2 font-ui text-[13px] text-zinc-100 shadow-inner placeholder:text-zinc-500 focus:border-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-600/50"
+        placeholder="What stood out today?"
+      ><%= typeof todayReflection === 'string' ? todayReflection : '' %></textarea>
+      <button type="submit" class="rounded-lg border border-zinc-600 bg-zinc-800 px-4 py-2 font-display text-[9px] font-bold uppercase tracking-wider text-zinc-100 hover:bg-zinc-700">
+        Save reflection
+      </button>
+    </form>
+  </section>
+  <% } %>
+
+  </div>
+
+  <div
+    id="quest-panel-weekly"
+    role="tabpanel"
+    aria-labelledby="quest-tab-weekly"
+    class="quest-tab-panel <%= questInitialTab === 'daily' ? 'hidden' : '' %>"
+  >
+    <% if (weeklyBoardReady) { %>
+    <section class="daily-dashboard mb-8 md:mb-10" aria-labelledby="weekly-board-heading">
+      <h2 id="weekly-board-heading" class="sr-only">Weekly progress</h2>
+      <% if (!weeklyRegularList.length && !weeklyBossList.length) { %>
+      <p class="rounded-2xl border border-dashed border-zinc-600 bg-zinc-900 px-4 py-8 text-center font-ui text-sm text-zinc-400">No weekly quests are configured for your current job yet.</p>
+      <% } else { %>
+      <% if (weeklyRegularList.length) { %>
+      <div class="mb-8 md:mb-10">
+        <div class="mb-4 flex flex-col gap-1 sm:mb-5 sm:flex-row sm:items-end sm:justify-between">
+          <div class="flex items-center gap-3">
+          <span class="daily-section-label__bar daily-section-label__bar--core h-10 w-1 shrink-0 rounded-full sm:h-12" aria-hidden="true"></span>
+          <div class="min-w-0">
+            <div class="flex flex-wrap items-center gap-2">
+              <h3 class="font-display text-sm font-bold uppercase tracking-[0.14em] text-sky-300 sm:text-base">Weekly missions</h3>
+              <span class="inline-flex w-fit items-center gap-1.5 rounded-lg border border-sky-500/30 bg-sky-500/10 px-2.5 py-1 font-mono text-[11px] font-semibold tabular-nums text-sky-200">
+                <span id="weekly-regular-done"><%= wRegD %></span><span class="text-sky-400/70">/</span><span id="weekly-regular-total"><%= wRegN %></span>
+              </span>
+            </div>
+            <p class="mt-0.5 font-ui text-[12px] text-zinc-500 sm:text-[13px]">Grouped by pillar · bigger objectives for your week.</p>
+          </div>
+          </div>
+        </div>
+        <ul class="daily-task-list">
+          <% weeklyRegularList.forEach(function (t) { %>
+          <%- include('../partials/daily-task-row', { task: t, bonusMult: null, questChannel: 'weekly' }) %>
+          <% }); %>
+        </ul>
+      </div>
+      <% } %>
+      <% if (weeklyBossList.length) { %>
+      <div class="mb-4 md:mb-6">
+        <div class="mb-4 flex flex-col gap-1 sm:mb-5 sm:flex-row sm:items-end sm:justify-between">
+          <div class="flex items-center gap-3">
+          <span class="daily-section-label__bar daily-section-label__bar--bonus h-10 w-1 shrink-0 rounded-full sm:h-12" aria-hidden="true"></span>
+          <div class="min-w-0">
+            <div class="flex flex-wrap items-center gap-2">
+              <h3 class="font-display text-sm font-bold uppercase tracking-[0.14em] text-amber-200 sm:text-base">Weekly boss</h3>
+              <span class="inline-flex w-fit items-center gap-1.5 rounded-lg border border-amber-500/30 bg-amber-500/10 px-2.5 py-1 font-mono text-[11px] font-semibold tabular-nums text-amber-200">
+                <span id="weekly-boss-done"><%= wBossD %></span><span class="text-amber-300/70">/</span><span id="weekly-boss-total"><%= wBossN %></span>
+              </span>
+            </div>
+            <p class="mt-0.5 font-ui text-[12px] text-zinc-500 sm:text-[13px]">One peak challenge with a bigger EXP payout.</p>
+          </div>
+          </div>
+        </div>
+        <ul class="daily-task-list">
+          <% weeklyBossList.forEach(function (t) { %>
+          <%- include('../partials/daily-task-row', { task: t, bonusMult: null, questChannel: 'weekly' }) %>
+          <% }); %>
+        </ul>
+      </div>
+      <% } %>
+      <% } %>
+    </section>
+    <% } else { %>
+    <div class="mb-6 rounded-2xl border border-amber-500/30 bg-amber-950/35 px-4 py-3 font-ui text-[12px] leading-relaxed text-amber-100 sm:text-[13px]" role="status">
+      <strong class="font-semibold">Weekly board</strong> needs a database update. Run <code class="rounded bg-zinc-950 px-1 py-0.5 font-mono text-[11px] text-zinc-300">npm run db:migrate-weekly</code> on the server, then reload.
+    </div>
+    <% } %>
+  </div>
+
+  <% if (ssrToasts.length) { %>
+  <script type="application/json" id="daily-ssr-toast-data"><%- JSON.stringify(ssrToasts) %></script>
+  <% } %>
+</article>
+
+<%- include('../partials/level-up-modal') %>
+<% if (typeof showJobWelcomeModal !== 'undefined' && showJobWelcomeModal && typeof jobWelcomeKind === 'string') { %>
+<%- include('../partials/job-welcome-modal') %>
+<% } %>
+
+<script src="/js/auth-ui.js" defer></script>
+<script src="/js/toast.js" defer></script>
+<script src="/js/level-up-modal.js" defer></script>
+<script src="/js/reborn-exp-ui.js" defer></script>
+<script src="/js/daily-actions.js" defer></script>
+<script src="/js/quest-tabs.js" defer></script>
+<script src="/js/daily-howto.js" defer></script>
+<% if (dailyFlowPhase === 'morning_pick') { %>
+<script src="/js/daily-morning-pick.js" defer></script>
+<% } %>
+<% if (typeof showJobWelcomeModal !== 'undefined' && showJobWelcomeModal) { %>
+<script src="/js/job-welcome-modal.js" defer></script>
+<% } %>

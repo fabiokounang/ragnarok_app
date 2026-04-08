@@ -1,0 +1,4 @@
+<% const src = typeof ambientMusicSrc === 'string' ? ambientMusicSrc.trim() : ''; %>
+<% const g = typeof gameUser !== 'undefined' ? gameUser : {}; %>
+<% const vol = typeof ambientMusicVolume === 'number' ? ambientMusicVolume : 0.22; %>
+<% if (src && g.musicEnabled === true) { %> data-app-music="1" data-app-music-src="<%= src %>" data-app-music-vol="<%= vol %>"<% } %>

@@ -1,0 +1,40 @@
+<div
+  id="jwelcome-root"
+  class="lvlup-root"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="jwelcome-heading"
+  aria-hidden="false"
+>
+  <div class="lvlup-root__backdrop" data-jwelcome-close tabindex="-1"></div>
+  <div class="lvlup-root__card jwelcome-card">
+    <div class="lvlup-root__glow" aria-hidden="true"></div>
+    <% if (jobWelcomeKind === 'first') { %>
+    <p class="lvlup-root__eyebrow font-mono">First job</p>
+    <h2 id="jwelcome-heading" class="lvlup-root__title font-display">You are on the board</h2>
+    <div class="jwelcome-body">
+      <p class="lvlup-root__sub jwelcome-p">
+        Your <strong>active job</strong> is the class in the header. <strong>Daily tasks</strong> on this page use that job’s quest pool, and <strong>EXP &amp; stat points</strong> go to this character only.
+      </p>
+      <ul class="jwelcome-list">
+        <li>Tap <strong>Initialize quest</strong> on a card, then <strong>check in</strong> as you do the work; the last step <strong>claims EXP</strong>.</li>
+        <li>Open <strong>Character</strong> (bottom nav) to add more classes (up to 3), switch <strong>active</strong> job, spend stats, or turn on <strong>in-app music</strong>.</li>
+      </ul>
+      <p class="lvlup-root__sub jwelcome-note">Extra classes start at <strong>level 1</strong> with their own stats until you play them as active.</p>
+    </div>
+    <% } else { %>
+    <p class="lvlup-root__eyebrow font-mono">Job slot</p>
+    <h2 id="jwelcome-heading" class="lvlup-root__title font-display">Class saved</h2>
+    <div class="jwelcome-body">
+      <p class="lvlup-root__sub jwelcome-p">
+        This slot now holds a new class with its own <strong>level, EXP, and stats</strong> (starting fresh at level 1 for that job).
+      </p>
+      <ul class="jwelcome-list">
+        <li><strong>Dailies</strong> still follow whichever job is <strong>active</strong> — use <strong>Set active</strong> on Character if you want to play this class today.</li>
+        <li>The <strong>header</strong> always shows your active job’s level and stats.</li>
+      </ul>
+    </div>
+    <% } %>
+    <button type="button" class="lvlup-root__btn font-display jwelcome-btn" data-jwelcome-close>Got it</button>
+  </div>
+</div>

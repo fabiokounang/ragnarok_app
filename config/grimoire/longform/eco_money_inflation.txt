@@ -1,0 +1,95 @@
+## Roles of money
+
+Medium of exchange (trade without barter), unit of account (prices in one yardstick), store of value (save for later). Modern money is mostly digital ledger entries backed by law and institutions.
+
+Central banks influence short-term interest rates and payment-system stability; they do not “print wealth.” Confidence that money will be accepted tomorrow is the real asset.
+
+## Inflation
+
+Inflation means a general rise in the price level — each currency unit buys less. Causes differ by episode: demand pull, cost push, expectations, monetary policy, supply shocks. Hyperinflation destroys trust quickly.
+
+People feel inflation unevenly: renters vs owners, commuters vs remote workers, savers in cash vs diversified assets. Averages hide distribution.
+
+## Deflation fears
+
+Falling prices sound nice for shoppers but can freeze investment and wages if everyone waits for tomorrow’s cheaper price. That is why policymakers sometimes prefer low stable inflation to zero.
+
+## Deeper dive — part 1
+
+Comparative advantage explains why countries trade even when one could technically outproduce another in every good: relative efficiency, not absolute dominance, sets the pattern of specialization.
+
+Price ceilings, like rent caps, can shrink the supply landlords offer or reduce maintenance incentives; price floors, like agricultural supports, can create surpluses that require storage or disposal policy.
+
+Externalities spill costs or benefits onto bystanders: vaccination helps the vaccinated person and also lowers risk for strangers; pollution from a factory hits lungs downwind who never bought the product.
+
+Public goods are non-rival and non-excludable in theory — clean air, national defense, basic scientific knowledge — which is why markets alone underfund them without taxes or collective rules.
+
+## Deeper dive — part 2
+
+Information asymmetry appears when sellers know more than buyers (used cars, complex insurance), inviting screening, signaling, warranties, and regulation to reduce fraud or mistaken trades.
+
+Behavioral economics documents predictable human quirks: present bias, loss aversion, anchoring — useful for designing savings defaults and for skepticism toward models that assume perfect rationality.
+
+The Phillips curve once summarized a tradeoff between inflation and unemployment; experience since the 1970s showed supply shocks and expectations can break a simple short-run relationship.
+
+Central bank independence is designed to separate day-to-day politics from interest-rate decisions, though mandates and appointments remain unavoidably political at a constitutional level.
+
+## Deeper dive — part 3
+
+Fiscal multipliers ask how much GDP moves when the government spends a dollar; estimates differ by whether the economy is slack, how financing works, and whether imports leak demand abroad.
+
+The Laffer curve is a pedagogical curve: tax revenue hits zero at rates of zero and (theoretically) at one hundred percent, with a peak between — but the peak’s location is an empirical fight, not a slogan.
+
+Human capital investment — education, training, health — raises productivity and wages over decades; cutting those budgets to “save money” often shifts costs to slower growth and higher social spending later.
+
+Urban economics links agglomeration: people and firms cluster because proximity speeds matching, sharing infrastructure, and idea spillovers — but also raises housing costs and congestion.
+
+## Deeper dive — part 4
+
+Environmental economics prices nature imperfectly: GDP rises when you cut a forest and sell timber, even if watersheds and biodiversity collapse — green accounting tries to widen the scorecard.
+
+Inequality metrics (Gini, percentile shares) describe distribution; they do not by themselves tell you whether the process is fair, efficient, or stable — those are moral and political layers on top.
+
+Sovereign debt crises mix math and credibility: if markets believe a state will inflate away obligations or default, rates spike and the fear can become self-fulfilling without a credible plan.
+
+Labor markets are not like apple markets: wages are sticky, contracts lag shocks, and norms about fairness influence whether firms cut pay versus headcount during downturns.
+
+## Deeper dive — part 5
+
+Productivity growth is the deep engine of higher living standards: better tools, better skills, better organization — not simply working longer hours, which hits biological and social limits.
+
+Antitrust debates ask when big firms help consumers through scale and when they harm through exclusion — “bigness” is not automatically evil or good; market structure and conduct matter.
+
+Development economics studies why some countries escape poverty traps: institutions, geography, history, health, education, and openness to ideas interact; single-factor stories rarely suffice.
+
+Real versus nominal: economists stress “real” values adjusted for inflation so you compare purchasing power across years; nominal headlines can mislead when the price level moves fast.
+
+## Deeper dive — part 6
+
+Crowding out suggests government borrowing can raise interest rates and displace private investment; crowding in happens when public infrastructure makes private projects more profitable.
+
+The impossible trinity (open-economy macro) claims you cannot simultaneously have fixed exchange rates, free capital movement, and independent monetary policy — something must give.
+
+Moral hazard appears when insurance dulls caution: bank bailouts without restructuring can encourage future risk-taking unless regulation and capital rules tighten in parallel.
+
+Gender and race gaps in pay and wealth reflect overlapping forces: discrimination, sorting, network access, occupational choice, and cumulative small disadvantages that compound over careers.
+
+## Deeper dive — part 7
+
+Opportunity cost is the unchosen path: when a city builds a stadium, the cost includes whatever else those bricks and hours could have produced, not only the invoice from the contractor.
+
+Comparative advantage explains why countries trade even when one could technically outproduce another in every good: relative efficiency, not absolute dominance, sets the pattern of specialization.
+
+Price ceilings, like rent caps, can shrink the supply landlords offer or reduce maintenance incentives; price floors, like agricultural supports, can create surpluses that require storage or disposal policy.
+
+Externalities spill costs or benefits onto bystanders: vaccination helps the vaccinated person and also lowers risk for strangers; pollution from a factory hits lungs downwind who never bought the product.
+
+## Deeper dive — part 8
+
+Public goods are non-rival and non-excludable in theory — clean air, national defense, basic scientific knowledge — which is why markets alone underfund them without taxes or collective rules.
+
+Information asymmetry appears when sellers know more than buyers (used cars, complex insurance), inviting screening, signaling, warranties, and regulation to reduce fraud or mistaken trades.
+
+Behavioral economics documents predictable human quirks: present bias, loss aversion, anchoring — useful for designing savings defaults and for skepticism toward models that assume perfect rationality.
+
+The Phillips curve once summarized a tradeoff between inflation and unemployment; experience since the 1970s showed supply shocks and expectations can break a simple short-run relationship.

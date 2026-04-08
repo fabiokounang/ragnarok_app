@@ -1,0 +1,111 @@
+## A network of networks
+
+The internet links billions of devices using shared rules (protocols) so data can hop across copper, fiber, radio, and satellite. No single company owns the whole thing; many organizations cooperate through standards and peering agreements.
+
+Your home Wi‑Fi is a local network; your ISP connects that bubble to larger backbones. “Getting online” means your traffic can reach public IP space and DNS can resolve names worldwide — Wi‑Fi alone without upstream is just a private island.
+
+## What you do on top of it
+
+The web (pages in browsers), email, online games, video calls, and app backends are services that use the internet as plumbing. People often say “internet” when they mean “the web” — handy in conversation, different technically.
+
+Mobile apps often talk to the same backends as websites, just with a different client. Streaming video might use UDP-heavy protocols; your bank uses encrypted TCP sessions. Same pipes, different application rules.
+
+## Addresses and names
+
+Each connected machine has an IP address (like a phone number for computers). DNS maps friendly names like example.com to those numbers so humans do not memorize digits.
+
+IPv4 addresses are scarce, so home networks use private ranges with NAT (network address translation) so many devices share one public IP. IPv6 expands the address space — adoption is uneven but growing.
+
+## Who runs what?
+
+ICANN and regional registries coordinate domain policy; ISPs and cloud giants operate huge physical infrastructure; standards bodies (like IETF) publish protocols as open documents. Censorship, outages, and peering disputes are political and commercial realities layered on technical design.
+
+## Deeper dive — part 1
+
+Vendor lock-in is not always evil — managed databases save talent for product features — but exit plans should exist before contracts auto-renew at punitive rates.
+
+Data residency laws may require certain records stay in-country; multi-region architecture is not only performance but legal partitioning.
+
+Open source licenses matter: copyleft can infect proprietary bundles; legal review on dependencies belongs in CI, not only release week panic.
+
+Disaster recovery drills prove backups restore; untested backups are hope, not strategy, when ransomware strikes Friday evening.
+
+## Deeper dive — part 2
+
+On-device ML versus cloud inference trades privacy, battery, and model size; hybrid approaches sync improvements when online with graceful offline degradation.
+
+Semantic versioning communicates intent if you honor it; breaking changes in minor releases train users to fear upgrades.
+
+Developer experience investments — docs, local dev scripts, seed data — compound; every hour saved per engineer per week pays rent on a senior salary.
+
+Supply chain attacks via compromised packages push teams toward pinning hashes, private registries, and reviewing diffs on updates — tedious and necessary.
+
+## Deeper dive — part 3
+
+Latency budgets force engineers to choose: a millisecond in a high-frequency trading loop is eternity; a millisecond in a human-facing form submit is invisible — context sets targets.
+
+Idempotency keys let clients retry network requests without double-charging a card; designing APIs for safe retries is part of reliability, not an afterthought.
+
+Caching trades freshness for speed; cache invalidation and naming things remain hard problems because stale data can mislead users subtly.
+
+Observability combines metrics, logs, and traces so on-call engineers can ask novel questions post-incident, not only answer pre-baked dashboards.
+
+## Deeper dive — part 4
+
+Least privilege for service accounts limits blast radius when a credential leaks; overly broad IAM roles are convenience debt that attackers love.
+
+Unicode and time zones are where innocent features go to die; internationalization is not translation alone — it is calendars, collation, and legal address formats.
+
+Accessibility (WCAG) is not charity; it improves SEO, mobile usability, and compliance risk — keyboard paths and contrast help everyone on a sunny patio.
+
+Technical debt is postponed work with interest; not all debt is bad — deliberate shortcuts to learn can be fine if scheduled for paydown.
+
+## Deeper dive — part 5
+
+Feature flags decouple deploy from release, letting teams test in production with small cohorts — but flag sprawl becomes configuration spaghetti without cleanup discipline.
+
+Encryption at rest protects disks; encryption in transit protects paths; neither stops a malicious insider with legitimate credentials — governance and auditing complete the picture.
+
+Container images should be minimal and scanned for CVEs; “it works on my laptop” images bloated with debug tools multiply attack surface in clusters.
+
+Postmortems blame systems and processes, not individuals, when culture is healthy; revenge postmortems teach people to hide facts next time.
+
+## Deeper dive — part 6
+
+Rate limiting and backoff protect shared infrastructure from accidental storms and hostile floods; polite clients exponential-backoff automatically.
+
+Static typing catches classes of errors early; dynamic languages move fast early and pay in refactors — team maturity and domain volatility influence the trade.
+
+Git history is communication; “WIP” commits and meaningless messages waste future you’s time when bisecting a regression at 2 a.m.
+
+Testing pyramids favor many fast unit tests, fewer integration tests, and rare end-to-end flakiness machines — inverted pyramids slow teams and erode trust in CI.
+
+## Deeper dive — part 7
+
+Vendor lock-in is not always evil — managed databases save talent for product features — but exit plans should exist before contracts auto-renew at punitive rates.
+
+Data residency laws may require certain records stay in-country; multi-region architecture is not only performance but legal partitioning.
+
+Open source licenses matter: copyleft can infect proprietary bundles; legal review on dependencies belongs in CI, not only release week panic.
+
+Disaster recovery drills prove backups restore; untested backups are hope, not strategy, when ransomware strikes Friday evening.
+
+## Deeper dive — part 8
+
+On-device ML versus cloud inference trades privacy, battery, and model size; hybrid approaches sync improvements when online with graceful offline degradation.
+
+Semantic versioning communicates intent if you honor it; breaking changes in minor releases train users to fear upgrades.
+
+Developer experience investments — docs, local dev scripts, seed data — compound; every hour saved per engineer per week pays rent on a senior salary.
+
+Supply chain attacks via compromised packages push teams toward pinning hashes, private registries, and reviewing diffs on updates — tedious and necessary.
+
+## Deeper dive — part 9
+
+Latency budgets force engineers to choose: a millisecond in a high-frequency trading loop is eternity; a millisecond in a human-facing form submit is invisible — context sets targets.
+
+Idempotency keys let clients retry network requests without double-charging a card; designing APIs for safe retries is part of reliability, not an afterthought.
+
+Caching trades freshness for speed; cache invalidation and naming things remain hard problems because stale data can mislead users subtly.
+
+Observability combines metrics, logs, and traces so on-call engineers can ask novel questions post-incident, not only answer pre-baked dashboards.

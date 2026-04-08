@@ -1,0 +1,105 @@
+## Cash ≠ profit (timing)
+
+You can record revenue when you invoice but still wait 60 days for payment. Expenses may hit immediately. That gap kills unprepared firms.
+
+Accrual accounting matches revenue to when you earn it; cash accounting follows bank movement. Both are legitimate; confusing them causes surprise overdrafts.
+
+## Levers
+
+Faster invoicing, deposits, shorter payment terms, lines of credit used carefully, less inventory tied up — all free cash.
+
+Negotiate supplier terms to align with customer terms. Offer small discounts for early pay only if math works — 2/10 net 30 is not free money.
+
+## Forecasting without fantasy
+
+Rolling 13-week cash forecast: expected inflows/outflows by week. Update weekly. Scenarios (pessimistic/base) beat single-number hope.
+
+## Deeper dive — part 1
+
+A cap table lists who owns equity; dilution happens when you issue new shares — necessary for talent or capital, but founders should model scenarios before signing term sheets they barely read.
+
+Customer concentration risk means one giant client can represent most revenue; losing them is an existential event, so diversification and contracts with clear renewal paths matter.
+
+Standard operating procedures turn founder magic into a trainable system; without them, quality varies with mood and new hires cannot replicate what the star did intuitively.
+
+Pricing power is the ability to raise prices without losing all demand; commodity sellers lack it, differentiated brands with loyal niches retain more of it — until substitutes arrive.
+
+## Deeper dive — part 2
+
+Channel conflict erupts when direct sales compete with partners; clear rules, geography splits, and fair lead registration prevent partnerships from rotting from suspicion.
+
+Intellectual property — trademarks, patents, trade secrets — protects differentiation but requires legal budget and enforcement; secrecy sometimes beats patents when speed matters more.
+
+Hiring for attitude and training for skill works in service businesses where empathy and reliability beat raw IQ on day one; the reverse can fail if culture never enforces standards.
+
+Burn rate and runway dominate startup conversations: months of cash left at current spending; boards watch this because fundraising markets close quickly when sentiment shifts.
+
+## Deeper dive — part 3
+
+Product-market fit is a feeling backed by retention: people come back without coupons, refer friends, and tolerate early rough edges because the core value is sharp.
+
+Debt can lever returns or sink a thin-margin operator; covenants, personal guarantees, and variable rates turn a spreadsheet assumption into a personal nightmare in downturns.
+
+Brand is the expectation you deposit in customers’ heads through every touchpoint; one rude support ticket can erase months of polished ads.
+
+Procurement in B2B means committees, security reviews, and pilot phases; consumer-style “growth hacks” rarely compress a nine-month enterprise cycle without trust.
+
+## Deeper dive — part 4
+
+Succession planning is not only for retirement: bus-factor risk means one sick founder should not freeze payroll — documentation and deputy authority matter early.
+
+ESG pressure from investors and employees nudges reporting on environment, social, and governance topics; greenwashing backlash teaches that metrics need audit, not slogans.
+
+Franchising scales a playbook in exchange for fees and control rules; mismatched incentives between franchisor and franchisee spark litigation when marketing funds feel misused.
+
+Bootstrapping preserves optionality but may cede a market window; raising capital buys speed but adds governance — neither path is universally correct.
+
+## Deeper dive — part 5
+
+Customer success teams in SaaS focus on adoption and renewal, not only support tickets; churn often traces to onboarding that assumed expertise the buyer never had.
+
+Operational leverage means fixed costs spread over more units — great on the way up, brutal on the way down when revenue slips but rent stays flat.
+
+Partnerships should start with a one-page memo: goals, metrics, who does what, exit clause; handshake deals age into resentment without written clarity.
+
+Regulatory compliance (GDPR, HIPAA, industry licenses) is not a side quest; product design must embed privacy and audit trails from the prototype stage.
+
+## Deeper dive — part 6
+
+Inventory turns and days sales outstanding are ratios owners should glance weekly; drifting numbers precede cash crises by weeks if you watch them.
+
+Culture is what people do when no one is watching; posters about integrity mean nothing if bonuses reward toxic shortcuts that “hit the number.”
+
+Unit economics asks whether one customer relationship pays for itself before you fantasize about millions of users: lifetime value minus acquisition and service cost should be positive.
+
+Working capital is the cash tied up in inventory plus receivables minus payables; growing fast can starve a “profitable” company if customers pay slower than suppliers demand.
+
+## Deeper dive — part 7
+
+A cap table lists who owns equity; dilution happens when you issue new shares — necessary for talent or capital, but founders should model scenarios before signing term sheets they barely read.
+
+Customer concentration risk means one giant client can represent most revenue; losing them is an existential event, so diversification and contracts with clear renewal paths matter.
+
+Standard operating procedures turn founder magic into a trainable system; without them, quality varies with mood and new hires cannot replicate what the star did intuitively.
+
+Pricing power is the ability to raise prices without losing all demand; commodity sellers lack it, differentiated brands with loyal niches retain more of it — until substitutes arrive.
+
+## Deeper dive — part 8
+
+Channel conflict erupts when direct sales compete with partners; clear rules, geography splits, and fair lead registration prevent partnerships from rotting from suspicion.
+
+Intellectual property — trademarks, patents, trade secrets — protects differentiation but requires legal budget and enforcement; secrecy sometimes beats patents when speed matters more.
+
+Hiring for attitude and training for skill works in service businesses where empathy and reliability beat raw IQ on day one; the reverse can fail if culture never enforces standards.
+
+Burn rate and runway dominate startup conversations: months of cash left at current spending; boards watch this because fundraising markets close quickly when sentiment shifts.
+
+## Deeper dive — part 9
+
+Product-market fit is a feeling backed by retention: people come back without coupons, refer friends, and tolerate early rough edges because the core value is sharp.
+
+Debt can lever returns or sink a thin-margin operator; covenants, personal guarantees, and variable rates turn a spreadsheet assumption into a personal nightmare in downturns.
+
+Brand is the expectation you deposit in customers’ heads through every touchpoint; one rude support ticket can erase months of polished ads.
+
+Procurement in B2B means committees, security reviews, and pilot phases; consumer-style “growth hacks” rarely compress a nine-month enterprise cycle without trust.
